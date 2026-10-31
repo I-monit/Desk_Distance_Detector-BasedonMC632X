@@ -1,0 +1,7 @@
+menu "PM features"
+
+config RT_USING_PM
+    bool "Support PM features"
+    default n
+
+endmenu

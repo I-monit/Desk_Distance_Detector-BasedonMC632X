@@ -1,0 +1,364 @@
+config SOC_ARCH
+	bool
+	option env=SOC_ARCH
+
+config FH_APP_GRP_ID
+    int "FH_APP_GRP_ID"
+    default 0
+
+menuconfig DUAL_CAMERA
+    bool "Dual Camera"
+    default n
+
+choice
+    prompt "Choose sensor"
+    default FH_USING_PS5270_MIPI_G0
+
+    config FH_USING_PS5270_MIPI_G0
+        bool "ps5270_mipi"
+
+    config FH_USING_OVOS02K_MIPI_GO
+        bool "ovos02k_mipi"
+
+    config FH_USING_SC3336_MIPI_G0
+        bool "sc3336_mipi"
+
+    config FH_USING_OVOS04C10_MIPI_G0
+        bool "ovos04c10_mipi"
+endchoice
+
+menuconfig ENABLE_NNA_DET
+    bool "enable nna detect"
+    default y
+
+menuconfig ENBALE_SMALL_TO_BIG
+    bool "small pic to big pic"
+    default n
+
+    if ENBALE_SMALL_TO_BIG
+        config SMALL_ISP_WIGHT
+        int "small ISP wigth"
+        default 384
+        config SMALL_ISP_HEIGHT
+        int "small ISP height"
+        default 384
+        choice
+                prompt "Select ISP FORMAT (small)"
+                default FH_APP_USING_FORMAT_384X384P110_G9
+
+                config FH_APP_USING_FORMAT_192X192P220_G9
+                    bool "FORMAT_192X192P220"
+
+                config FH_APP_USING_FORMAT_384X384P110_G9
+                    bool "FORMAT_384X384P110"
+        endchoice
+        config FRAMES_TO_CHANGE_SIZE
+        int "set small frames"
+        default 3
+
+    endif
+
+menuconfig VIDEO_GRP0
+    bool "Video Group 0"
+    default y
+
+    if VIDEO_GRP0
+
+        menu "ISP Config"
+            config ISP_WIDTH_G0
+            int "ISP Width"
+            default 1536
+
+            config ISP_HEIGHT_G0
+            int "ISP Height"
+            default 1536
+
+            choice
+                prompt "Select ISP FORMAT"
+                default FH_APP_USING_FORMAT_1536X1536P30_G0
+
+                config FH_APP_USING_FORMAT_1080P30_G0
+                    bool "FORMAT_1080P30"
+                config FH_APP_USING_FORMAT_1080P20_G0
+                    bool "FORMAT_1080P20"
+                config FH_APP_USING_FORMAT_1080P20_SLAVE_G0
+                    bool "FORMAT_1080P20_SLAVE"
+                config FH_APP_USING_FORMAT_2304X1296P15_G0
+                    bool "FORMAT_2304X1296P15"
+                config FH_APP_USING_FORMAT_1536X1536P15_G0
+                    bool "FORMAT_1536x1536P15"
+                config FH_APP_USING_FORMAT_1536X1536P30_G0
+                    bool "FORMAT_1536x1536P30"
+                config FH_APP_USING_FORMAT_2688X1520P25_G0
+                    bool "FORMAT_2688X1520P25"
+                config FH_APP_USING_FORMAT_2688X1520P30_G0
+                    bool "FORMAT_2688X1520P30"
+            endchoice
+        endmenu
+
+        menu "VPU Conifg"
+            menuconfig CH0_ENABLE_G0
+            bool "Channel 0 enable"
+            default y
+
+            if CH0_ENABLE_G0
+                config VPU_WIDTH_CH0_G0
+                int "CH0 Width"
+                default 1536
+
+                config VPU_HEIGHT_CH0_G0
+                int "CH0 Height"
+                default 1536
+
+                config VPU_BUF_NUM_CH0_G0
+                int "CH0 Buf Num"
+                default 3
+
+                menuconfig VENC_ENABLE_G0_CH0
+                    bool "Venc Enable GRP0 CH0"
+                    default y
+
+                if VENC_ENABLE_G0_CH0
+
+                    config CH0_BIT_RATE_G0
+                        int "CH0 bitrate (kbps)"
+                        default 2048
+
+                    config CH0_FRAME_COUNT_G0
+                        int "CH0 framecount"
+                        default 30
+
+                    config CH0_FRAME_TIME_G0
+                        int "CH0 frametime"
+                        default 1
+
+                    choice
+                            prompt "CH0 Encode Type"
+                            default FH_CH0_USING_SAMPLE_H264_G0
+
+                            config FH_CH0_USING_SAMPLE_H264_G0
+                                bool "NORMAL_H264"
+
+                            config FH_CH0_USING_SAMPLE_H265_G0
+                                bool "NORMAL_H265"
+                    endchoice
+                endif
+            endif
+
+            menuconfig CH1_ENABLE_G0
+            bool "Channel 1 enable"
+            default n
+
+            if CH1_ENABLE_G0
+                config VPU_WIDTH_CH1_G0
+                int "CH1 Width"
+                default 1920
+
+                config VPU_HEIGHT_CH1_G0
+                int "CH1 Height"
+                default 1080
+
+                config VPU_BUF_NUM_CH1_G0
+                int "CH1 Buf Num"
+                default 3
+
+                menuconfig VENC_ENABLE_G0_CH1
+                    bool "Venc Enable GRP0 CH1"
+                    default y
+                if VENC_ENABLE_G0_CH1
+
+                    config CH1_BIT_RATE_G0
+                        int "CH1 bitrate (kbps)"
+                        default 2048
+
+                    config CH1_FRAME_COUNT_G0
+                        int "CH1 framecount"
+                        default 25
+
+                    config CH1_FRAME_TIME_G0
+                        int "CH1 frametime"
+                        default 1
+
+                    choice
+                            prompt "CH1 Encode Type"
+                            default FH_CH1_USING_SAMPLE_H265_G0
+
+                            config FH_CH1_USING_SAMPLE_H264_G0
+                                bool "NORMAL_H264"
+
+                            config FH_CH1_USING_SAMPLE_H265_G0
+                                bool "NORMAL_H265"
+                    endchoice
+                endif
+            endif
+
+            menuconfig CH2_ENABLE_G0
+            bool "Channel 2 enable"
+            default y
+
+            if CH2_ENABLE_G0
+                config VPU_WIDTH_CH2_G0
+                int "CH1 Width"
+                default 512
+
+                config VPU_HEIGHT_CH2_G0
+                int "CH2 Height"
+                default 288
+
+                config VPU_BUF_NUM_CH2_G0
+                int "CH1 Buf Num"
+                default 3
+            endif
+        endmenu
+    endif
+
+    menuconfig VIDEO_GRP1
+    bool "Video Group 1"
+    default n
+
+    if VIDEO_GRP1
+        menu "ISP Config"
+            config ISP_WIDTH_G1
+            int "ISP Width"
+            default 1536
+
+            config ISP_HEIGHT_G1
+            int "ISP Height"
+            default 1536
+
+            choice
+                prompt "Select ISP FORMAT"
+                default FH_APP_USING_FORMAT_1536X1536P30_G1
+
+                config FH_APP_USING_FORMAT_1080P30_G1
+                    bool "FORMAT_1080P30"
+                config FH_APP_USING_FORMAT_1080P20_G1
+                    bool "FORMAT_1080P20"
+                config FH_APP_USING_FORMAT_1080P20_SLAVE_G1
+                    bool "FORMAT_1080P20_SLAVE"
+                config FH_APP_USING_FORMAT_1536X1536P15_G1
+                    bool "FORMAT_1536x1536P15"
+                config FH_APP_USING_FORMAT_2304X1296P15_G1
+                    bool "FORMAT_2304X1296P15"
+                config FH_APP_USING_FORMAT_1536X1536P30_G1
+                    bool "FORMAT_1536x1536P30"
+            endchoice
+        endmenu
+
+        menu "VPU Conifg"
+            menuconfig CH0_ENABLE_G1
+            bool "Channel 0 enable"
+            default y
+
+            if CH0_ENABLE_G1
+                config VPU_WIDTH_CH0_G1
+                int "CH0 Width"
+                default 1536
+
+                config VPU_HEIGHT_CH0_G1
+                int "CH0 Height"
+                default 1536
+
+                config VPU_BUF_NUM_CH0_G1
+                int "CH0 Buf Num"
+                default 3
+
+                menuconfig VENC_ENABLE_G1_CH0
+                    bool "Venc Enable GRP1 CH0"
+                    default y
+                if VENC_ENABLE_G1_CH0
+
+                    config CH0_BIT_RATE_G1
+                        int "CH0 bitrate (kbps)"
+                        default 2048
+
+                    config CH0_FRAME_COUNT_G1
+                        int "CH0 framecount"
+                        default 30
+
+                    config CH0_FRAME_TIME_G1
+                        int "CH0 frametime"
+                        default 1
+
+                    choice
+                            prompt "CH0 Encode Type"
+                            default FH_CH0_USING_SAMPLE_H264_G1
+
+                            config FH_CH0_USING_SAMPLE_H264_G1
+                                bool "NORMAL_H264"
+
+                            config FH_CH0_USING_SAMPLE_H265_G1
+                                bool "NORMAL_H265"
+                    endchoice
+                endif
+            endif
+
+            menuconfig CH1_ENABLE_G1
+            bool "Channel 1 enable"
+            default n
+
+            if CH1_ENABLE_G1
+                config VPU_WIDTH_CH1_G1
+                int "CH1 Width"
+                default 1920
+
+                config VPU_HEIGHT_CH1_G1
+                int "CH1 Height"
+                default 1080
+
+                config VPU_BUF_NUM_CH1_G1
+                int "CH1 Buf Num"
+                default 3
+
+                menuconfig VENC_ENABLE_G1_CH1
+                    bool "Venc Enable GRP1 CH1"
+                    default y
+                if VENC_ENABLE_G1_CH1
+
+                    config CH1_BIT_RATE_G1
+                        int "CH1 bitrate (kbps)"
+                        default 2048
+
+                    config CH1_FRAME_COUNT_G1
+                        int "CH1 framecount"
+                        default 25
+
+                    config CH1_FRAME_TIME_G1
+                        int "CH1 frametime"
+                        default 1
+
+                    choice
+                            prompt "CH1 Encode Type"
+                            default FH_CH1_USING_SAMPLE_H265_G1
+
+                            config FH_CH1_USING_SAMPLE_H264_G1
+                                bool "NORMAL_H264"
+
+                            config FH_CH1_USING_SAMPLE_H265_G1
+                                bool "NORMAL_H265"
+                    endchoice
+                endif
+            endif
+
+            menuconfig CH2_ENABLE_G1
+            bool "Channel 2 enable"
+            default y
+
+            if CH2_ENABLE_G1
+                config VPU_WIDTH_CH2_G1
+                int "CH1 Width"
+                default 512
+
+                config VPU_HEIGHT_CH2_G1
+                int "CH2 Height"
+                default 288
+
+                config VPU_BUF_NUM_CH2_G1
+                int "CH1 Buf Num"
+                default 3
+            endif
+        endmenu
+    endif
+
+
+

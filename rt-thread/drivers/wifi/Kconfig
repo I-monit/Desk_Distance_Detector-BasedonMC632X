@@ -1,0 +1,153 @@
+menu "WiFi Configuration"
+config FH_USING_WIFI
+    bool "Enable WiFi"
+    default n
+
+if FH_USING_WIFI
+    choice
+        prompt "Choose USBWIFI or SDIOWIFI"
+        default WIFI_USING_USBWIFI
+
+        config WIFI_USING_USBWIFI
+            bool "Enable USB Wifi"
+            select RT_USING_FH_USBOTG
+            depends on RT_USING_USB
+        config WIFI_USING_SDIOWIFI
+            select RT_USING_SDIO
+            bool "Enable SDIO Wifi"
+            depends on FH_USING_WIFI
+    endchoice
+
+    if WIFI_USING_SDIOWIFI
+        config WIFI_SDIO
+            int "the SDIO used by wifi"
+            default 0
+        config USING_1BIT_MODE
+            bool "USING 1BIT MODE"
+            default n
+        config FH_SDIO_IDMA_CHAIN
+            bool
+            default n
+        choice
+            prompt "Choose SDIOWifi"
+            default WIFI_USING_MARVEL
+
+            config WIFI_USING_CYPRESS
+                bool "Enable CYPRESS"
+                depends on WIFI_USING_SDIOWIFI
+
+            config WIFI_USING_MARVEL
+                bool "Enable MARVEL"
+                depends on WIFI_USING_SDIOWIFI
+
+            config WIFI_USING_RTL8192FS
+                bool "Enable RTL8192FS"
+                depends on WIFI_USING_SDIOWIFI
+
+            config WIFI_USING_HI3861L
+                bool "Enable HI3861L"
+                select FH_SDIO_IDMA_CHAIN
+                depends on WIFI_USING_SDIOWIFI
+        endchoice
+    endif
+
+    if WIFI_USING_CYPRESS
+        choice
+            prompt "Choose Cypress Wifi"
+            default WIFI_USING_CY43438
+
+        config WIFI_USING_CY43438
+            bool "Enable CY43438"
+            depends on WIFI_USING_CYPRESS
+
+        config WIFI_USING_CY43455
+            bool "Enable CY43455"
+            depends on WIFI_USING_CYPRESS
+        endchoice
+    endif
+
+    if WIFI_USING_CY43438
+        choice
+            prompt "Choose CY43438 mode"
+            default WIFI_USING_CY43438_LOWPOWER
+
+        config WIFI_USING_CY43438_NORMAL
+            bool "Enable CY43438_NORMAL"
+            depends on WIFI_USING_CY43438
+
+        config WIFI_USING_CY43438_LOWPOWER
+            bool "Enable CY43438_LOWPOWER"
+            depends on WIFI_USING_CY43438
+        endchoice
+    endif
+
+    config WIFI_USING_CY43438_WLTOOL
+        bool "Enable CY43438_WLTOOL"
+        depends on WIFI_USING_CY43438
+        default n
+
+    config WIFI_USING_CY43438_RFTEST
+        bool "Enable CY43438 RFTEST"
+        depends on WIFI_USING_CY43438_WLTOOL
+        default n
+
+    config WIFI_USING_CY43455_WLTOOL
+        bool "Enable CY43455_WLTOOL"
+        depends on WIFI_USING_CY43455
+        default n
+
+    config WIFI_USING_CY43455_RFTEST
+        bool "Enable CY43455 RFTEST"
+        depends on WIFI_USING_CY43455_WLTOOL
+        default n
+
+    if WIFI_USING_USBWIFI
+        choice
+            prompt "Choose USBWifi"
+            default WIFI_USING_USBWIFI_8188F
+
+            config WIFI_USING_USBWIFI_8188F
+                bool "Enable RTL8188FTV"
+                depends on WIFI_USING_USBWIFI
+            config WIFI_USING_USBWIFI_RTL8192F
+                bool "Enable RTL8192FC"
+                depends on WIFI_USING_USBWIFI
+            config WIFI_USING_USBWIFI_RTL8192E
+                bool "Enable RTL8192EU"
+                depends on WIFI_USING_USBWIFI
+            config WIFI_USING_USBWIFI_RTL8731BU
+                bool "Enable RTL8731BU"
+                depends on WIFI_USING_USBWIFI
+            config WIFI_USING_USBWIFI_MTK7603U
+                bool "Enable MTK7603U"
+                depends on WIFI_USING_USBWIFI
+        endchoice
+    endif
+
+    if WIFI_USING_RTL8192FS
+        config WIFI_STA_ONLY
+            bool "WIFI STA ONLY"
+            default n
+    endif
+    if WIFI_USING_USBWIFI_RTL8192E
+        config WIFI_STA_ONLY
+            bool "WIFI STA ONLY"
+            default n
+    endif
+    if WIFI_USING_USBWIFI_RTL8731BU
+        config WIFI_STA_ONLY
+            bool "WIFI STA ONLY"
+            default n
+    endif
+    if WIFI_USING_USBWIFI_RTL8731BU || WIFI_USING_USBWIFI_RTL8192F || WIFI_USING_USBWIFI_RTL8192E || WIFI_USING_RTL8192FS || WIFI_USING_USBWIFI_8188F
+        config WIFI_RTL_POWER_CTL
+            bool "WIFI Power by Rate & Power Limit"
+            default n
+    endif
+    if WIFI_USING_USBWIFI_MTK7603U
+        config WIFI_MTK_POWER_CTL
+            bool "WIFI MTK7603 Power Config"
+            default n
+    endif
+endif
+endmenu

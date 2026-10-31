@@ -1,0 +1,41 @@
+menuconfig CH2_ENABLE_G1
+	bool "Channel 2 enable"
+	default n
+
+	if CH2_ENABLE_G1
+		config CH2_MAX_WIDTH_G1
+			int "CH2 Max Width   (Range 64 - 512, Align by 16)"
+			range 64 512
+			default 0
+
+		config CH2_MAX_HEIGHT_G1
+			int "CH2 Max Height  (Range 64 - 2560, Align by 16)"
+			range 64 2560
+			default 0
+
+		config CH2_WIDTH_G1
+			int "CH2 Width   (Range 64 - 512, Align by 16)"
+			range 64 512
+			default 512
+
+		config CH2_HEIGHT_G1
+			int "CH2 Height  (Range 64 - 2560, Align by 16)"
+			range 64 2560
+			default 288
+
+		choice
+			prompt "CH2 YUV STYLE"
+			default FH_CH2_USING_RGB888_G1
+
+			config FH_CH2_USING_RGB888_G1
+				bool "VOMODE RGB888"
+		endchoice
+
+		config CH2_BUFNUM_G1
+			int "CH2 buffer number"
+			default 3
+
+		config NN_ENABLE_G1
+			bool "NN ENABLE"
+			default y
+	endif

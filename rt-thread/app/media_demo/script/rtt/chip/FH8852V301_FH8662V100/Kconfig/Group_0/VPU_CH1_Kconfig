@@ -1,0 +1,175 @@
+menuconfig CH1_ENABLE_G0
+	bool "Channel 1 enable"
+	default n
+
+	if CH1_ENABLE_G0
+		config CH1_MAX_WIDTH_G0
+			int "CH1 Max Width   (Range 64 - 864, Align by 16)"
+			range 64 864
+			default 0
+
+		config CH1_MAX_HEIGHT_G0
+			int "CH1 Max Height  (Range 64 - 2560, Align by 16)"
+			range 64 2560
+			default 0
+
+		config CH1_WIDTH_G0
+			int "CH1 Width   (Range 64 - 864, Align by 16)"
+			range 64 864
+			default 640
+
+		config CH1_HEIGHT_G0
+			int "CH1 Height  (Range 64 - 2560, Align by 16)"
+			range 64 2560
+			default 480
+
+		choice
+			prompt "CH1 YUV STYLE"
+			default FH_CH1_USING_TILE224_G0
+
+			config FH_CH1_USING_SCAN_G0
+				bool "VOMODE SCAN"
+		endchoice
+
+		config CH1_BUFNUM_G0
+			int "CH1 buffer number"
+			default 3
+
+		choice
+			prompt "CH1 BIND"
+			default CH1_BIND_ENC_G0
+
+			config CH1_BIND_ENC_G0
+				depends on !FH_CH1_USING_YUYV_G0 && !FH_CH1_USING_NV16_G0
+				bool "BIND ENC"
+
+			config CH1_BIND_NONE_G0
+				bool "NONE"
+		endchoice
+
+		menuconfig CH1_MJPEG_G0
+			depends on !FH_CH1_USING_YUYV_G0 && !FH_CH1_USING_NV16_G0
+			bool "MJPEG Enable"
+			default n
+
+			if CH1_MJPEG_G0
+				config CH1_MJPEG_BIT_RATE_G0
+					int "CH1 bitrate (kbps)"
+					default 2048
+
+				config CH1_MJPEG_FRAME_COUNT_G0
+					int "CH1 framecount"
+					default 25
+
+				config CH1_MJPEG_FRAME_TIME_G0
+					int "CH1 frametime"
+					default 1
+
+				choice
+					prompt "CH1 Bitrate Control Type"
+					default FH_CH1_USING_SAMPLE_MJPEG_VBR_G0
+
+					config FH_CH1_USING_SAMPLE_MJPEG_CBR_G0
+						bool "CBR"
+
+					config FH_CH1_USING_SAMPLE_MJPEG_VBR_G0
+						bool "VBR"
+
+					config FH_CH1_USING_SAMPLE_MJPEG_FIXQP_G0
+						bool "Fix QP"
+				endchoice
+			endif
+
+		if CH1_BIND_ENC_G0
+			menu "VENC"
+				config CH1_BIT_RATE_G0
+					int "CH1 bitrate (kbps)"
+					default 1024
+
+				config CH1_FRAME_COUNT_G0
+					int "CH1 framecount"
+					default 25
+
+				config CH1_FRAME_TIME_G0
+					int "CH1 frametime"
+					default 1
+				choice
+					prompt "CH1 Encode Type"
+					default FH_CH1_USING_SAMPLE_H264_G0
+
+					config FH_CH1_USING_SAMPLE_H264_G0
+						bool "NORMAL_H264"
+
+					config FH_CH1_USING_SAMPLE_S264_G0
+						bool "SMART_H264"
+
+					config FH_CH1_USING_SAMPLE_H265_G0
+						bool "NORMAL_H265"
+
+					config FH_CH1_USING_SAMPLE_S265_G0
+						bool "SMART_H265"
+
+					config FH_CH1_USING_SAMPLE_NONE_G0
+						bool "NONE"
+				endchoice
+
+				config FH_CH1_OPEN_BREATH_EFFECT_G0
+					bool "Open CH1 Breath Effect (Not Suggested)"
+					default n
+
+				choice
+					prompt "CH1 Bitrate Control Type"
+					default FH_CH1_USING_SAMPLE_H264_VBR_G0
+					depends on !FH_CH1_USING_SAMPLE_NONE_G0
+
+					config FH_CH1_USING_SAMPLE_H264_VBR_G0
+						depends on FH_CH1_USING_SAMPLE_H264_G0 || FH_CH1_USING_SAMPLE_S264_G0
+						bool "VBR"
+
+					config FH_CH1_USING_SAMPLE_H265_VBR_G0
+						depends on FH_CH1_USING_SAMPLE_H265_G0 || FH_CH1_USING_SAMPLE_S265_G0
+						bool "VBR"
+
+					config FH_CH1_USING_SAMPLE_H264_FIXQP_G0
+						depends on FH_CH1_USING_SAMPLE_H264_G0 || FH_CH1_USING_SAMPLE_S264_G0
+						bool "Fix QP"
+
+					config FH_CH1_USING_SAMPLE_H265_FIXQP_G0
+						depends on FH_CH1_USING_SAMPLE_H265_G0 || FH_CH1_USING_SAMPLE_S265_G0
+						bool "Fix QP"
+
+					config FH_CH1_USING_SAMPLE_H264_CBR_G0
+						depends on FH_CH1_USING_SAMPLE_H264_G0 || FH_CH1_USING_SAMPLE_S264_G0
+						bool "CBR"
+
+					config FH_CH1_USING_SAMPLE_H265_CBR_G0
+						depends on FH_CH1_USING_SAMPLE_H265_G0 || FH_CH1_USING_SAMPLE_S265_G0
+						bool "CBR"
+
+					config FH_CH1_USING_SAMPLE_H264_AVBR_G0
+						depends on FH_CH1_USING_SAMPLE_H264_G0 || FH_CH1_USING_SAMPLE_S264_G0
+						bool "AVBR"
+
+					config FH_CH1_USING_SAMPLE_H265_AVBR_G0
+						depends on FH_CH1_USING_SAMPLE_H265_G0 || FH_CH1_USING_SAMPLE_S265_G0
+						bool "AVBR"
+
+					config FH_CH1_USING_SAMPLE_H264_CVBR_G0
+						depends on (FH_CH1_USING_SAMPLE_H264_G0 || FH_CH1_USING_SAMPLE_S264_G0)
+						bool "CVBR"
+
+					config FH_CH1_USING_SAMPLE_H265_CVBR_G0
+						depends on (FH_CH1_USING_SAMPLE_H265_G0 || FH_CH1_USING_SAMPLE_S265_G0)
+						bool "CVBR"
+
+					config FH_CH1_USING_SAMPLE_H264_QVBR_G0
+						depends on (FH_CH1_USING_SAMPLE_H264_G0 || FH_CH1_USING_SAMPLE_S264_G0)
+						bool "QVBR"
+
+					config FH_CH1_USING_SAMPLE_H265_QVBR_G0
+						depends on (FH_CH1_USING_SAMPLE_H265_G0 || FH_CH1_USING_SAMPLE_S265_G0)
+						bool "QVBR"
+				endchoice
+			endmenu
+		endif
+	endif

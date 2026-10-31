@@ -1,0 +1,209 @@
+索引：
+1. 如何编写用户库的Makefile？
+2. 如何编写用户app的Makefile？
+3. 如何添加新库？
+4. 如何添加板级代码？
+5. app/lib如何引用其它代码库？
+6. lib中添加的shell函数不见了，怎么办？
+7. 自定义链接过程，需要注意什么？
+8. 如何添加已编译好的库代码?
+9: BSP代码已经编译完成，如何交付给应用开发部门？
+10: 对于BSP交付的库，应用开发部门如何导入？
+
+
+Q: 如何编写用户库的Makefile？
+A:
+   1. 引用build/config.mk
+   2. 定义库名称LIBNAME
+   3. 定义编译库所需要的源码文件: CSRCS
+   4. 定义本地编译所需要的特别编译选项：LOCAL_CFLAGS
+   5. 最后引用build/lib.mk 
+
+Q： 如何编写用户app的Makefile？
+A:
+   1. 引用build/config.mk，获取板级的定义和配置
+   2. 根据需要引入.config，（如果用户app支持Kconfig进行配置的话）
+   3. 定义SAMPNAME，为app的输出名称，结果为生成$(SAMPNAME).elf/.bin等
+   4. 定义需要编译的源码：SAMP_SRCS
+   5. 定义编译本地代码所需要的特别的编译选项:LOCAL_CFLAGS，也可以应用它来包含本地头文件
+   6. 定义app链接时，需要额外链接的库（如果有的话）： LOCAL_LIBS
+   7. 根据需要定义app链接时所需要的特别链接指令：LOCAL_LINKFLAGS (使用CC识别的格式，而不是LD识别的格式）
+   8. 如果引入.config的话，其它对.config的处理代码
+   9. 最后引用build/app.mk 
+
+Q： 如何添加新库？
+A:
+   1. 根据要添加的代码库选择一个存放目录，把源码拷贝到选定的目录中
+   2. 根据上面的用户库的Makefile编写指导编写Makefile
+   3. 如果新加库需要配置，则给库编写Kconfig，实现功能配置
+   4. 如果可配置，修改存放路径中的Kconfig，添加新库的Kconfig引用，或是增加新库的选择入口
+   5. 修改build/rtt_config.mk，根据配置项选择，确定是有条件编译还是无条件编译：
+  	       i. 无条件编译：  [即：无需配置，始终编译]
+              LNKLIBS += -lmy_new_lib
+              LIBDIRS += path/to/my_new_lib
+              DEPLIBS += $(OUT)/lib/libmy_new_lib.a
+              RTT_INCDIR += $(SDKROOT)/path/to/my_new_lib/export_header_lib
+              SYS_INCDIR += $(SDKROOT)/path/to/my_new_lib/export_header_app
+
+	       ii. 有条件编译： [即：根据配置选项确定是否需要编译]
+	        ifeq ($(CONFIG_MY_LIB_OPTION),y) 
+	           # compile option，同无条件编译
+	        endif
+
+	        说明：
+  	          a) my_new_lib是添加的库的名称
+    	        b) path/to/my_new_lib，是库代码的相对路径名称，一般建议库名称和路径同名
+      	      c) RTT_INCDIR，如果该库需要被其它库引用，则需要在此添加输出函数的头文件路径
+        	    d) SYS_INCDIR，如果该库被app代码引用，则需要在此添加输出函数的头文件路径
+          	  e) 通常情况，RTT_INCDIR/SYS_INCDIR配置一个就可以了。
+            	f) CONFIG_MY_LIB_OPTION为该库在Kconfig中的配置名称，其中CONFIG_为配置前缀 
+
+Q： 如何添加板级代码？
+A：
+   1. 首先需要确定添加的板级所使用的芯片型号
+   2. 在platform/下对应的芯片型号目录下有当前支持的板级代码
+   3. 一般情况下，可以以现有代码作为模板，拷贝一份板级代码，然后对板级代码进行修改，以匹配自己的板子
+   4. 修改platform/Kconfig，在对应的芯片下，添加自定义板级的配置开关
+   5. 修改build/rtt_config.mk，为新添加的板级定义BOARD_NAME
+   6. 在新的板级目录下，需要提供3个文件：flash_layout.c/board_def.h/xxxxboard_iopad.h
+   7. 修改芯片目录下的xxxx_board_def.h，根据自定义的板级宏，包含板级目录下的board_def.h
+   8. 修改芯片目录下的iopad.h，根据自定义的板级宏，包含板级目录下的xxxxboard_iopad.h
+   9. 修改板级目录下的flash_layout.c，对自定义板级的flash分区进行修改
+   10. 修改板级目录下的board_def.h，对自定义板级的内存方案/引脚使用等进行定义修改
+   11. 修改板级目录下的xxxxboard_iopad.h，对自定义板级的引脚进行自定义修改
+   12. 通过make menuconfig 选择自定义的板级 
+
+举例如下：希望为FH8626v100芯片增加一款doorbell的板级
+
+   1. 查看platform/fh8626v100目录，已存在app_board/test_board等目录
+   2. 拷贝app_board并重命名为doorbell
+   3. 修改platform/Kconfig，找到config CONFIG_BOARD_APP, 在该配置项后添加配置项：
+
+        config CONFIG_BOARD_DOORBELL
+            bool "doorbell board"
+
+   4. 修改fh8626v100/fh8626v100_board_def.h，在CONFIG_BOARD_APP条件分支后添加条件分支：
+
+    	#elif defined(CONFIG_BOARD_DOORBELL)
+    	#include "doorbell/board_def.h"
+
+   5. 修改iopad.h，在CONFIG_BOARD_APP条件分支后添加条件分支：
+
+    	#elif defined(CONFIG_BOARD_DOORBELL)
+    	#include "doorbell/doorbell_iopad.h"
+
+   6. 重命名fh8626v100/doorbell/appboard_iopad.h为fh8626v100/doorbell/doorbell_iopad.h
+   7. 分别修改fh8626v100/doorbell/下的3个文件，适配自定义的板级，进行flash/内存/引脚等进行自定义
+   8. 修改build/rtt_config.mk，添加：
+
+    	ifeq ($(CONFIG_CONFIG_BOARD_DOORBELL),y)
+  	      BOARD_NAME = doorbell
+	    endif
+
+   9. 通过make menuconfig选择doorbell board 
+
+Q： app/lib如何引用其它代码库？
+A：
+   1. 一个已知的库，通常包含2个部分，1个是导出的头文件，1个是二进制的lib.a
+   2. 外部代码需要引用该库，需要引用该库导出的头文件，以使用相应的数据结构/函数/变量等
+   3. SDK中自动编译生成的库代码，编译后都被存放在$(OUT)/lib目录中，链接命令已经包含该目录
+   4. 如果在另外的库代码中引用该库，则需要把该库的头文件目录添加到build/rtt_config.mk中的变量RTT_INCDIR
+   5. 如果在应用代码中引用该库，则需要把该库的头文件目录添加到build/rtt_config.mk中的变量SYS_INCDIR 
+
+Q: lib中添加的shell函数不见了，怎么办？
+A: 如果发现通过MSH_CMD_EXPORT导出的函数在命令行中不存在时，可以通过修改build/extern.ld文件，
+   通过手动添加的方式，强制引入该shell命令，举例说明如下：
+
+   1. 在某个libmy_own_lib.a中通过MSH_CMD_EXPORT(my_test_cmd, my test cmd);导出的函数在命令行不能执行
+   2. 修改extern.ld，在文件末尾添加：
+
+    	EXTERN(my_test_cmd);
+
+   3. 重新链接代码，这时进入命令行，就可以正确执行my_test_cmd命令了。
+   4. 如果是应用代码需要导出msh命令，则请包含rttshell.h，且MSH_CMD_EXPORT修改为SHELL_CMD_EXPORT 
+
+Q: 自定义链接过程，需要注意什么？
+A:
+   1. 用户如果只是要增加自己的特定代码/数据段，直接修改build/link.ld即可
+   2. 如果用户需要自定义内存布局，则删除build/link.ld中的INCLUDE mem.ld，并添加自己的内存布局定义
+   3. 不要改动INCLUDE extern.ld，否则，可能会导致代码中某些导出的命令在命令行不能被识别
+   4. 不要改动INCLUDE stage1.ld语句，否则，可能会导致系统不能正常启动
+   5. 如果支持快速启动，不要改动INCLUDE stage2.ld，否则，启动过程中可能出现异常
+   6. 一般的应用代码，请添加到__stage_30_start = .;语句后
+   7. 与启动相关的代码，请添加到stage1.ld/stage2.ld中，修改这2个文件一定要慎重，需要非常清楚明白你修改的代码的作用及后果，
+      否则，可能导致系统启动异常。 
+
+Q: 如何添加已编译好的库代码?
+A: 添加已经编译好的库代码，可以有2种方式：
+
+   1. 把代码放到SDK/lib/$CPU下面，并在build/rtt_config.mk中，为LNKLIBS添加对应的链接选项，示例如下（libmy_test.a)
+
+       	LNKLIBS += -lmy_test
+
+   2. 把头文件和二进制库代码放到external下的子目录中，最好库名称与子目录名称相同，在子目录中添加Makefile，Makefile示例如下：
+
+    	include $(SDKROOT)/build/config.mk
+
+    	all:
+        	cp libmy_test.a $(OUT)/lib
+
+    	即： 在编译链接时，把库拷贝到链接库目录
+    	同时，也需要更新build/rtt_config.mk，示例如下：
+
+	    ifeq ($(CONFIG_USING_MY_TEST_LIB),y)
+	        LNKLIBS += -lmy_test
+	        LIBDIRS += external/my_test
+	        DEPLIBS += $(OUT)/lib/libmy_test.a
+	        RTT_INCDIR += $(SDKROOT)/external/my_test/include
+	        SYS_INCDIR += $(SDKROOT)/external/my_test/include
+	    endif
+
+    	其中：在其它LIB中引用，需要添加RTT_INCDIR，在app中引用该库，需要在SYS_INCDIR添加include目录路径 
+
+Q: BSP代码已经编译完成，需要交付哪些文件给应用开发部门？
+A：BSP需要交付:
+   1. POSIX头文件： compat/include目录
+   2. SDK发布的库代码：lib/
+   3. BSP编译交付的库：$(OUT)/lib
+   4. 应用代码中如果有依赖芯片的接口调用，则应用代码需要定义芯片类型，该定义生成在$(OUT)/appconfig.h中
+   5. 链接脚本文件：build/*.ld $(OUT)/lib/mem.ld
+   6. 第三方组件的头文件（库代码已经包含在$(OUT)/lib中）
+   7. 其它特殊的编译配置等
+
+   说明：build/tools/makenv.sh脚本可以用于辅助生成交付代码，
+       用法：build/tools/makenv.sh DEST_PATH
+       注意：1. 须在SDK根目录执行该脚本
+             2. DEST_PATH需替换为实际需要生成的目标文件夹，自动创建该文件夹
+             3. 如果需要拷贝该目标文件夹，对应的Makefile中的路径需要同步修改
+
+Q: 对于BSP交付的库，应用开发部门如何导入？
+A：主要是目录结构的组织和Makefile的编写：
+   1. 目录结构，建议分为：
+      a. compat/include： POSIX头文件
+      b. sdklib: SDK发布库代码
+      c. bsplib: BSP编译生成的库
+      d. ldscript: 链接脚本存放目录
+      d. external/include: 其它第三方库输出的头文件路径（如有同名文件，则需要建立子目录）
+   2. Makefile编写：
+      a. 根据项目需要定义CFLAGS, LDFLAGS，参考rtt_config.mk
+      b. 链接脚本：link.ld，LDFLAGS定义链接选项-Tlink.ld
+      c. 包含头文件路径:
+        1) compat/include
+        2) sdklib/inc
+        3) sdklib/$(CHIP)/inc       [CHIP由产品定义]
+        4) sdklib/advapi/inc
+      d. 链接库文件路径：
+        1) sdklib/$(CPU)   [CPU可选arm11/a7，根据实际芯片配置选择]
+        2) bsplib
+        3) sdklib/$(CHIP)/lib
+        4) sdklib/$(CHIP)/lib/sensors
+        5) ldscript
+      e. 添加链接库名称，定义所有的需链接的库名称为LIBS：
+        -Wl,--start-groups $(LIBS) --Wl,--end-groups
+      f. 如果应用代码中引用了与芯片相关的代码，还可以添加-include appconfig.h  [需要添加appconfig.h的搜索路径]
+      g. 其它应用代码自己的内容
+
+   3. 注意事项：
+      a. 在进行链接时，应用代码应该添加 -nostartfiles链接选项，确保链接RTOS库
+      b. 注意浮点运算的支持，根据选项的不同，链接的库可能不同，参考rtt_config.mk     [CONFIG_RT_USING_VFP]
+      c. 是否支持softcore模式，链接的libmedia_process_rtt.a也不同，参考rtt_config.mk [CONFIG_FH_USING_SOFTCORE]

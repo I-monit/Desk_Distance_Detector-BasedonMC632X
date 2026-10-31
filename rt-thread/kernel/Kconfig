@@ -1,0 +1,15 @@
+config SDKROOT
+    string
+    option env="SDKROOT"
+
+menu "Kernel Feature"
+
+source "$SDKROOT/kernel/src/Kconfig"
+
+source "$SDKROOT/kernel/libc/Kconfig"
+
+source "$SDKROOT/kernel/cplusplus/Kconfig"
+
+source "$SDKROOT/kernel/pm/Kconfig"
+
+endmenu

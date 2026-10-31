@@ -1,0 +1,71 @@
+# Top-level output directory
+/out/
+# Per-app/per-demo output directories (build artifacts)
+/**/out/
+out/
+**/out/
+/app/bsp_demo/out/
+
+# Object files, archives, binaries
+*.o
+*.a
+*.obj
+*.lib
+*.elf
+*.bin
+*.hex
+*.map
+*.img
+*.dis
+*.size
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# Dependency files (gcc -MD)
+/*.d
+*.d
+
+# Editor / OS files
+*.swp
+*.swo
+*.d
+*.dis
+*.size
+*~
+Thumbs.db
+*.rej
+*.orig
+.DS_Store
+
+# Build system artifacts (kconfig-frontends autotools)
+/build/kconfig-frontends/Makefile.in
+/build/kconfig-frontends/aclocal.m4
+/build/kconfig-frontends/config.log
+/build/kconfig-frontends/config.status
+/build/kconfig-frontends/configure
+/build/kconfig-frontends/libtool
+/build/kconfig-frontends/.version
+/build/kconfig-frontends/.sconsign.dblite
+/build/kconfig-frontends/.autostuff/
+/build/kconfig-frontends/kconf.map
+/build/kconfig-frontends/kconfig-mconf
+/build/kconfig-frontends/utils/kconfig-diff
+/build/kconfig-frontends/utils/kconfig-merge
+/build/kconfig-frontends/libs/images/images.c_orig
+/build/kconfig-frontends/.deps/
+/build/kconfig-frontends/frontends/.deps/
+/build/kconfig-frontends/libs/.deps/
+/build/kconfig-frontends/utils/.deps/
+*.Po
+*.Plo
+*.lo
+*.la
+*.dblite
+
+# Build output in tools directory
+/build/tools/media_demo.bin

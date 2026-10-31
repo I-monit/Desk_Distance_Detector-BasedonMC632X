@@ -1,0 +1,22 @@
+config SDKROOT
+    string
+    option env="SDKROOT"
+
+# menu "Linux Adapter Interface"
+
+config RT_USING_COMPONENTS_LINUX_ADAPTER
+    bool "Using for linux adapter"
+    default y
+    select RT_USING_TIMEKEEPING
+    ---help---
+        for linux application implemented on rtt
+
+    if RT_USING_COMPONENTS_LINUX_ADAPTER
+        config __LINUX_ERRNO_EXTENSIONS__
+        # this config makes difference on ESHUTDOWN
+        # force use the toolchains' definition(defined as 110)
+        bool # "Using errno extension for toolchain"
+        default y
+    endif
+
+# endmenu

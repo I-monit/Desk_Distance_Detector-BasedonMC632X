@@ -1,0 +1,71 @@
+menu "components packages"
+
+config PKG_USING_OPTPARSE
+    bool
+    default y
+
+menu "VBUS config"
+config FH_USING_VBUS
+    bool "vbus to communication with ARC"
+    default y
+
+config FH_USING_SOFTCORE
+    bool "using co-processor to process video"
+    depends on FH_ENABLE_VIDEO && FH_USING_VBUS
+    default n
+endmenu
+
+config FH_USING_PROFILING
+    bool "Enable system profiling"
+    default y
+
+config PKG_USING_VI
+    bool "Using packages vi"
+    default n
+    depends on PKG_USING_OPTPARSE
+
+config RT_USING_WEBCLIENT
+    bool "Using webclient"
+    default n
+
+config FH_USING_YMODEM
+    bool "ymodem"
+    default n
+
+config RT_USING_MOBILE_TELE
+    bool "Enable MOBILE_TELE"
+    select RT_USING_USB
+    select RT_USING_USB_CORE
+    select RT_USING_FH_USBOTG
+    default n
+
+if RT_USING_MOBILE_TELE
+    choice
+        prompt "Choose dial method"
+        default MOBILE_TELE_VIA_PPPOS
+
+        config MOBILE_TELE_VIA_PPPOS
+            bool "MOBILE_TELE via pppos"
+            select RT_USING_USB_SERIAL
+            select RT_USING_USB_CDC_ACM
+            select RT_LWIP_PPP
+            select RT_LWIP_PPPOS
+
+        config RT_USING_USB_RNDIS_TELE
+            bool "MOBILE_TELE via rndis"
+            select RT_USING_USB_MAC
+            select RT_USING_USB_RNDIS
+            select RT_USING_USB_SERIAL
+            select RT_USING_USB_CDC_ACM
+
+        config RT_USING_USB_ECM_TELE
+            bool "MOBILE_TELE via ecm"
+            select RT_USING_USB_MAC
+            select RT_USING_USB_ECM
+            select RT_USING_USB_SERIAL
+            select RT_USING_USB_CDC_ACM
+    endchoice
+endif
+
+source "utils/ulog/Kconfig"
+endmenu

@@ -1,0 +1,84 @@
+choice
+	prompt "Source Input"
+	default VPU_MODE_ISP_G0
+
+	config VPU_MODE_MEM_G0
+		depends on MEM_YES
+		bool "YUV Memory In"
+
+	config VPU_MODE_ISP_G0
+		bool "ISP In"
+endchoice
+
+if VPU_MODE_ISP_G0
+	menu "ISP Config"
+		config FH_APP_USING_IRCUT_G0
+			bool "Open Ircut"
+			default n
+
+		config MAX_ISP_WIDTH_G0
+			int "Max ISP width"
+			default 0
+
+		config MAX_ISP_HEIGHT_G0
+			int "Max ISP height"
+			default 0
+
+		source "$ROOT/script/Sensor0_Kconfig"
+	endmenu
+endif
+
+if VPU_MODE_MEM_G0
+	menu "MEM Input config"
+		config MEM_IN_WIDTH_G0
+			int "ddr input width"
+			default 1920
+
+		config MEM_IN_HEIGHT_G0
+			int "ddr input height"
+			default 1080
+
+		config MEM_IN_SPLIT_G0
+			bool "yuv file split"
+			default y
+
+		choice
+			prompt "ddr input mode"
+			depends on VPU_MODE_MEM_G0
+			default MEM_IN_MODE_NV16_G0
+
+			config MEM_IN_MODE_NV16_G0
+				bool "NV16"
+
+			config MEM_IN_MODE_NV12_G0
+				bool "NV12"
+
+			config MEM_IN_MODE_YUYV_G0
+				depends on !MEM_IN_SPLIT_G0
+				bool "YUYV"
+
+			config MEM_IN_MODE_UYVY_G0
+				depends on !MEM_IN_SPLIT_G0
+				bool "UYVY"
+		endchoice
+
+		config MEM_IN_TIMESTAMP_G0
+			int "ddr input timestamp"
+			default 0
+
+		config MEM_IN_YFILE_G0
+			depends on MEM_IN_SPLIT_G0
+			string "input y file name"
+			default "tt.y"
+
+		config MEM_IN_UVFILE_G0
+			depends on MEM_IN_SPLIT_G0
+			string "input uv file name"
+			default "tt.uv22"
+
+		config MEM_IN_YUVFILE_G0
+			depends on !MEM_IN_SPLIT_G0
+			string "input yuv file name"
+			default "CrowdRun_3840x2160_yuv422.yuv"
+	endmenu
+endif

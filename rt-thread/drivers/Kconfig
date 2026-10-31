@@ -1,0 +1,376 @@
+config SDKROOT
+    string
+    option env="SDKROOT"
+
+menu "Drivers"
+
+source "$SDKROOT/drivers/usb/Kconfig"
+source "$SDKROOT/drivers/wifi/Kconfig"
+
+menu "Choose uart device"
+config FH_USING_UART0
+    bool "Using uart0"
+    default y
+
+config FH_USING_UART1
+    bool "Using uart1"
+    default n
+
+config FH_USING_UART2
+    bool "Using uart2"
+    default n
+endmenu
+
+config FH_USING_UART_DMA
+    bool "Use Uart DMA"
+    default n
+
+config FH_USING_AES
+    bool "aes"
+    default y
+
+if !FH_USING_AES
+config FH_USING_CESA
+    bool "cesa"
+    default y
+
+config FH_USING_EFUSE
+    bool "efuse"
+    default y
+endif
+
+choice
+    prompt "different efuse version"
+    depends on FH_USING_EFUSE
+    default FH_EFUSE_V1
+
+config FH_EFUSE_V1
+    bool "fullhan byte access version"
+    depends on FH_USING_EFUSE
+
+config FH_EFUSE_V2
+    bool "molchip block access version"
+    depends on FH_USING_EFUSE
+	
+endchoice
+
+config FH_USING_ACW
+    bool "audio"
+    default y
+
+config FH_USING_CLOCK
+    bool
+    default y
+
+config FH_USING_AON_CLK
+    bool
+    depends on FH_USING_CLOCK && CONFIG_ARCH_FH8626V300
+    default y
+
+config FH_USING_DMA
+	bool "FH DesignWare AHB DMA support"
+    depends on CONFIG_CHIP_FH8626V100
+    default y
+
+config FH_USING_AXI_DMA
+    bool "dma"
+    depends on !CONFIG_CHIP_FH8626V100 && !CONFIG_CHIP_MC632X && !CONFIG_ARCH_FH8852V301_FH8662V100 && !CONFIG_ARCH_FH8626V300
+    default n
+
+config FH_USING_MOL_DMA
+	bool "dma"
+	depends on CONFIG_CHIP_MC632X || CONFIG_ARCH_FH8852V301_FH8662V100 || CONFIG_ARCH_FH8626V300
+	default y
+
+config FH_USING_DMA_MEM
+    bool "using dma memory"
+    depends on FH_USING_DMA || FH_USING_AXI_DMA || FH_USING_MOL_DMA
+    default y
+
+config FH_USING_FLASH
+    bool "flash"
+    default y
+
+    if FH_USING_FLASH
+        config RT_MAX_FAL_PART_NUM
+            int "max flash partition supported"
+            default 10
+
+        config RT_USING_SFUD
+            bool "sfud"
+            default y
+            if RT_USING_SFUD
+                config RT_SFUD_USING_QSPI
+                    bool 
+                    default n
+
+                config CTL_DUAL_WIRE_SUPPORT
+                    bool "flash using 2 wire read"
+                    select RT_SFUD_USING_QSPI
+                    default n
+
+                config CTL_QUAD_WIRE_SUPPORT
+                    bool "flash using 4 wire read"
+                    select CTL_DUAL_WIRE_SUPPORT
+                    select RT_SFUD_USING_QSPI
+                    default n
+            endif
+
+        config RT_USING_FAL_SFUD_ADAPT
+            bool "nor"
+            select RT_USING_MTD_NOR
+
+        config FH_USING_NAND_FLASH
+            bool "nand"
+            select RT_USING_MTD_NAND
+
+        config SFUD_USING_SFDP
+            bool
+            default y
+
+        config SFUD_USING_FLASH_INFO_TABLE
+            bool
+            default y
+
+        config RT_CAPACITYID_DISCRIMINATE_FLASH
+            bool
+            default y
+    endif
+
+config FH_USING_GMAC
+    bool "gmac"
+
+if !FH_USING_GMAC
+    config FH_USING_QOS_GMAC
+    bool "qos gmac"
+endif
+
+config RT_USING_GPIO
+    bool "gpio"
+    default y
+
+	if RT_USING_GPIO
+	choice
+		prompt "GPIO Driver"
+		default RT_USING_DW_GPIO
+		config RT_USING_DW_GPIO
+			bool "Fullhan GPIO Driver"
+
+		config RT_USING_MOL_GPIO
+			bool "MolChip GPIO Driver"
+	endchoice
+	endif
+config RT_USING_I2C
+    bool "i2c"
+    default y
+
+config FH_USING_I2S
+    bool "i2s"
+    depends on !(CONFIG_ARCH_MC632X || CONFIG_ARCH_FH8852V301_FH8662V100)
+    default n
+
+config FH_USING_MOL_I2S
+    bool "i2s"
+    depends on CONFIG_CHIP_MC632X
+    default n
+
+config MOL_I2S_SLAVE
+    bool "I2S Slave Mode"
+    default n
+    depends on FH_USING_MOL_I2S
+
+config RT_USING_SDIO
+    bool "mmc"
+    default y
+
+config RT_MMCSD_MAX_PARTITION
+    int "SD Card Max partition"
+    depends on RT_USING_SDIO
+    range 2 16
+    default 16
+
+config RT_USING_MTD
+    bool
+    default y
+
+config RT_USING_MTD_NOR
+    bool
+    default n
+
+config RT_USING_MTD_NAND
+    bool
+    default n
+
+config RT_USING_PWM
+    bool "pwm"
+    default y
+
+config RT_USING_RTC
+    bool "rtc"
+    default y
+
+    if RT_USING_RTC
+
+    config RTC_SUPPORT_CLK_SRC_SWITCH
+    bool
+    default y
+    depends on CONFIG_ARCH_FH8852V301_FH8662V100
+
+    if RTC_SUPPORT_CLK_SRC_SWITCH
+        choice
+            prompt "select RTC clock source"
+            default RTC_USE_OSC_CLK
+            help
+                depends on the hardware, select 'osc clk' if have oscillator,
+                otherwise select 'clk on chip' (just ensure tsensor works,
+                RTC cannot be used for timekeeping)
+            config RTC_USE_OSC_CLK
+                bool 'osc clk (32.768KHz)'
+                help
+                    if have oscillator in hardware, select this
+            config RTC_USE_ONCHIP_CLK
+                bool 'onchip clk'
+                help
+                    if select this, just ensure tsensor works, rtc-dev will not created
+        endchoice
+    endif
+    config FH_USE_TSENSOR
+        bool "USE TSENSOR"
+        default y
+    config FH_USE_TSENSOR_OFFSET
+        bool "USE ENHANCEMENT TSENSOR"
+        depends on FH_USE_TSENSOR
+        default n
+    config RT_USING_ALARM
+        bool "Using rtc alarm func"
+        default n
+    config RTC_SYNC_USING_NTP
+        bool "Using NTP auto sync RTC time"
+        depends on PKG_NETUTILS_NTP
+        default n
+
+        if RTC_SYNC_USING_NTP
+        config RTC_NTP_FIRST_SYNC_DELAY
+            int "NTP first sync delay time(second) for network connect"
+            default 30
+        config RTC_NTP_SYNC_PERIOD
+            int "NTP auto sync period(second)"
+            default 3600
+       endif
+    endif
+
+config FH_USING_SADC
+    bool "sadc"
+    default n
+
+config RT_USING_SERIAL
+    bool
+    default y
+
+config RT_USING_SPI
+    bool "spi"
+    default y
+    select FH_USING_DMA_MEM
+
+    if RT_USING_SPI
+    config RT_USING_SPISLAVE
+        bool "spi_slave"
+        default n
+    endif
+
+config RT_USING_TIMER
+    bool "timer"
+    default y
+	if RT_USING_TIMER
+		choice
+			prompt "Timer Driver"
+			default RT_USING_DW_TIMER
+			config RT_USING_ARCH_TIMER
+				bool "ARM ARCH Timer Driver"
+                depends on ARCH_ARM_CORTEX_A7
+
+            config RT_USING_DW_TIMER
+                bool "Fullhan Timer Driver"
+
+			config RT_USING_MOL_TIMER
+				bool "MolChip Timer Driver"
+			endchoice
+	endif
+
+config RT_USING_WDT
+    bool "wdt"
+    default y
+
+config FH_USING_FH_PERF
+    depends on CONFIG_ARCH_FH885xV200 || CONFIG_ARCH_FH865x || CONFIG_ARCH_FH8636_FH8852V20X || CONFIG_ARCH_FH885xV300 || CONFIG_ARCH_FH8862 || CONFIG_ARCH_FH885xV310 || CONFIG_ARCH_FH8852V301_FH8662V100 || CONFIG_ARCH_FH885xV500 || CONFIG_ARCH_FH8626V300
+    bool "fh_perf"
+    default n
+
+if FH_USING_FH_PERF
+
+config FH_PERF_V1_0
+    depends on CONFIG_ARCH_FH885xV200 || CONFIG_ARCH_FH865x || CONFIG_ARCH_FH8636_FH8852V20X
+    bool "fh_perf v1.0"
+    default y
+
+config FH_PERF_V1_1
+    depends on CONFIG_ARCH_FH885xV300 || CONFIG_ARCH_FH8862 || CONFIG_ARCH_FH885xV310 || CONFIG_ARCH_FH885xV500
+    bool "fh_perf v1.1 from FH885xV300/FH8862/FH885XV310/FH885XV500"
+    default y
+
+config FH_PERF_V2
+    depends on CONFIG_ARCH_FH8852V301_FH8662V100 || CONFIG_ARCH_FH8626V300
+    bool "fh_perf v2"
+    default y
+
+endif
+
+
+config FH_USING_FH_STEPMOTOR
+    depends on CONFIG_ARCH_FH865x || CONFIG_ARCH_FH8636_FH8852V20X || CONFIG_ARCH_FH885xV300 || CONFIG_ARCH_FH8862 || CONFIG_ARCH_FH885xV310 || CONFIG_ARCH_FH8852V301_FH8662V100 || CONFIG_ARCH_MC632X || CONFIG_ARCH_FH885xV500 || CONFIG_ARCH_FH8626V300
+    bool "fh_smt"
+    default n
+
+config RT_USING_DW_INTC
+    bool
+    depends on ARCH_ARM_ARM11
+
+config RT_USING_ARM_GIC
+    bool
+    depends on ARCH_ARM_CORTEX_A7
+
+if FH_USING_FH_STEPMOTOR
+config FH_STEPMOTOR_V1_1
+    depends on CONFIG_ARCH_FH885xV300 || CONFIG_ARCH_FH8862 || CONFIG_ARCH_FH885xV310 || CONFIG_ARCH_MC632X || CONFIG_ARCH_FH8852V301_FH8662V100 || CONFIG_ARCH_FH885xV500 || CONFIG_ARCH_FH8626V300
+    bool "fh_smt v1.1 from FH885xV300/FH8862/FH885XV310"
+    default y
+
+config FH_STEPMOTOR_V1_2
+    depends on CONFIG_ARCH_FH885xV500 || CONFIG_ARCH_FH8626V300
+    bool "fh_smt v1.2 from FH885xV500/FH8626V300"
+    default y
+    select FH_STEPMOTOR_V1_1
+endif
+
+config FH_USING_FH_HASH
+    depends on CONFIG_ARCH_FH885xV300 || CONFIG_ARCH_FH8862 || CONFIG_ARCH_FH885xV310 || CONFIG_ARCH_FH885xV500 || CONFIG_ARCH_FH8626V300
+    bool "fh_hash"
+    default y
+
+config FH_USING_MODULE_CASE
+    depends on CONFIG_ARCH_FH885xV500
+    bool "fh_module_case"
+    default y
+
+if FH_USING_MODULE_CASE
+choice
+    prompt "Choose fh_module_case"
+    config FH_USING_MODULE_CASE_RPC
+        bool "ARC RPC"
+
+    config FH_USING_MODULE_CASE_LOCAL
+        bool "LOCAL"
+endchoice
+endif
+
+endmenu

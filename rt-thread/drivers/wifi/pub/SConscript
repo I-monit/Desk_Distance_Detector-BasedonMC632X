@@ -1,0 +1,17 @@
+Import('RTT_ROOT')
+Import('SDK_ROOT')
+Import('rtconfig')
+from building import *
+
+cwd  = GetCurrentDir()
+
+src = Glob('*.c')
+src += Glob('api_wifi/*.c')
+
+path_inc = [cwd]
+global_inc = [cwd]
+global_inc += [cwd + '/api_wifi']
+
+group = DefineGroup('wifipub', src, depend = ['RT_USING_WIFI'], LOCAL_CPPPATH = path_inc, CPPPATH=global_inc)
+
+Return('group')

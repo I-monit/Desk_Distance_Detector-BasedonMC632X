@@ -1,0 +1,329 @@
+menu "Device virtual file system"
+
+config RT_USING_DFS
+    bool "Using device virtual file system"
+    select RT_USING_MUTEX
+    default y
+    help
+        The device file system is a light weight virtual file system.
+
+if RT_USING_DFS
+    config DFS_USING_WORKDIR
+        bool "Using working directory"
+        default y
+
+    config DFS_FILESYSTEMS_MAX
+        int "The maximal number of mounted file system"
+        default 4 if RT_USING_DFS_NFS
+        default 4
+
+    config DFS_FILESYSTEM_TYPES_MAX
+        int "The maximal number of file system type"
+        default 4 if RT_USING_DFS_NFS
+        default 4
+
+    config DFS_FD_MAX
+        int "The maximal number of opened files"
+        default 256
+
+    config RT_USING_DFS_MNTTABLE
+        bool "Using mount table for file system"
+        default n
+        help
+            User can use mount table for automatically mount, for example:
+                const struct dfs_mount_tbl mount_table[] =
+                {
+                    {"flash0", "/", "elm", 0, 0},
+                    {0}
+                };
+            The mount_table must be terminated with NULL.
+
+    config RT_USING_DFS_ELMFAT
+        bool "Enable elm-chan fatfs"
+        default y
+        help
+            FatFs is a generic FAT/exFAT file system module for small embedded systems.
+
+    if RT_USING_DFS_ELMFAT
+        config RT_DFS_ELM_BLK_CACHE
+            bool "Using Blk Cache"
+            depends on RT_USING_SDIO
+            default n
+        help
+            Reduce FatFs Write to IO.
+    endif
+
+    if RT_USING_DFS_ELMFAT
+        menu "elm-chan's FatFs, Generic FAT Filesystem Module"
+        config RT_DFS_ELM_CODE_PAGE_FILE
+            bool "Using OEM code page file"
+            default y
+
+        if ! RT_DFS_ELM_CODE_PAGE_FILE
+            config RT_DFS_ELM_CODE_PAGE
+                int "OEM code page"
+                default 936
+        endif
+
+        config RT_DFS_ELM_WORD_ACCESS
+            bool "Using RT_DFS_ELM_WORD_ACCESS"
+            default y
+
+        choice
+            prompt "Support long file name"
+            default RT_DFS_ELM_USE_LFN_2
+
+            config RT_DFS_ELM_USE_LFN_0
+                bool "0: LFN disable"
+
+            config RT_DFS_ELM_USE_LFN_1
+                bool "1: LFN with static LFN working buffer"
+
+            config RT_DFS_ELM_USE_LFN_2
+                bool "2: LFN with dynamic LFN working buffer on the stack"
+
+            config RT_DFS_ELM_USE_LFN_3
+                bool "3: LFN with dynamic LFN working buffer on the heap"
+        endchoice
+
+        config RT_DFS_ELM_USE_LFN
+            int
+            default 0 if RT_DFS_ELM_USE_LFN_0
+            default 1 if RT_DFS_ELM_USE_LFN_1
+            default 2 if RT_DFS_ELM_USE_LFN_2
+            default 3 if RT_DFS_ELM_USE_LFN_3
+
+        config RT_DFS_ELM_MAX_LFN
+            int "Maximal size of file name length"
+            range 12 255
+            default 128
+
+        config RT_DFS_ELM_DRIVES
+            int "Number of volumes (logical drives) to be used."
+            default 2
+
+        config RT_DFS_ELM_MAX_SECTOR_SIZE
+            int "Maximum sector size to be handled."
+            default 512
+            help
+                if you use some spi nor flash for fatfs, please set this the erase sector size, for example 4096.
+
+        config RT_DFS_ELM_USE_ERASE
+            bool "Enable sector erase feature"
+            default n
+
+        config RT_DFS_ELM_REENTRANT
+            bool "Enable the reentrancy (thread safe) of the FatFs module"
+            default y
+
+        config RT_DFS_ELM_USE_EXFAT
+            bool "Enable exFAT to support SD CARD capacity larger then 32GB"
+            default y
+        endmenu
+    endif
+
+    config RT_USING_DFS_DEVFS
+        bool "Using devfs for device objects"
+        default y
+
+    config RT_USING_DFS_ROMFS
+        bool "Enable ReadOnly file system on flash"
+        default n
+
+    config RT_USING_DFS_RAMFS
+        bool "Enable RAM file system"
+        select RT_USING_MEMHEAP
+        default n
+
+    config RT_USING_DFS_UFFS
+        bool "Enable UFFS file system: Ultra-low-cost Flash File System"
+        select RT_USING_MTD_NAND
+        default n
+
+    if RT_USING_DFS_UFFS
+        choice
+            prompt "UFFS ECC mode"
+            default RT_UFFS_ECC_MODE_1
+
+            config RT_UFFS_ECC_MODE_0
+                bool "0: Do not use ECC"
+
+            config RT_UFFS_ECC_MODE_1
+                bool "1: UFFS calculate the ECC"
+
+            config RT_UFFS_ECC_MODE_2
+                bool "2: Flash driver(or by hardware) calculate the ECC"
+
+            config RT_UFFS_ECC_MODE_3
+                bool "3: Hardware calculate the ECC and automatically write to spare."
+        endchoice
+
+        config RT_UFFS_ECC_MODE
+            int
+            default 0 if RT_UFFS_ECC_MODE_0
+            default 1 if RT_UFFS_ECC_MODE_1
+            default 2 if RT_UFFS_ECC_MODE_2
+            default 3 if RT_UFFS_ECC_MODE_3
+
+    endif
+
+    config RT_USING_DFS_JFFS2
+        bool "Enable JFFS2 file system"
+        select RT_USING_MTD_NOR
+        select FH_USING_ZLIB
+        select FH_USING_FHCRC
+        default y
+
+    config RT_USING_DFS_YAFFS2
+        bool "Enable YAFFS2 file system"
+        select RT_USING_MTD_NAND
+        select FH_USING_NAND_FLASH
+        default n
+
+    config RT_USING_DFS_NFS
+        bool "Using NFS v3 client file system"
+        depends on RT_USING_LWIP
+        default n
+
+    if RT_USING_DFS_NFS
+        config RT_NFS_HOST_EXPORT
+            string "NFSv3 host export"
+            default "192.168.1.5:/"
+    endif
+
+    config RT_USING_MTD_UBI
+        bool "Enable UBI - Unsorted block images"
+        default n
+
+        if RT_USING_MTD_UBI
+            config MTD_UBI_WL_THRESHOLD
+                int "UBI wear-leveling threshold"
+                default 4096
+                range 2 65536
+                help
+                This parameter defines the maximum difference between the highest
+                erase counter value and the lowest erase counter value of eraseblocks
+                of UBI devices. When this threshold is exceeded, UBI starts performing
+                wear leveling by means of moving data from eraseblock with low erase
+                counter to eraseblocks with high erase counter.
+
+                The default value should be OK for SLC NAND flashes, NOR flashes and
+                other flashes which have eraseblock life-cycle 100000 or more.
+                However, in case of MLC NAND flashes which typically have eraseblock
+                life-cycle less than 10000, the threshold should be lessened (e.g.,
+                to 128 or 256, although it does not have to be power of 2).
+
+                config MTD_UBI_BEB_LIMIT
+                int "Maximum expected bad eraseblock count per 1024 eraseblocks"
+                default 20
+                range 0 768
+                help
+                This option specifies the maximum bad physical eraseblocks UBI
+                expects on the MTD device (per 1024 eraseblocks). If the underlying
+                flash does not admit of bad eraseblocks (e.g. NOR flash), this value
+                is ignored.
+
+                NAND datasheets often specify the minimum and maximum NVM (Number of
+                Valid Blocks) for the flashes' endurance lifetime. The maximum
+                expected bad eraseblocks per 1024 eraseblocks then can be calculated
+                as "1024 * (1 - MinNVB / MaxNVB)", which gives 20 for most NANDs
+                (MaxNVB is basically the total count of eraseblocks on the chip).
+
+                To put it differently, if this value is 20, UBI will try to reserve
+                about 1.9% of physical eraseblocks for bad blocks handling. And that
+                will be 1.9% of eraseblocks on the entire NAND chip, not just the MTD
+                partition UBI attaches. This means that if you have, say, a NAND
+                flash chip admits maximum 40 bad eraseblocks, and it is split on two
+                MTD partitions of the same size, UBI will reserve 40 eraseblocks when
+                attaching a partition.
+
+                This option can be overridden by the "mtd=" UBI module parameter or
+                by the "attach" ioctl.
+
+                Leave the default value if unsure.
+
+                config MTD_UBI_FASTMAP
+                bool "UBI Fastmap (Experimental feature)"
+                default n
+                help
+                Important: this feature is experimental so far and the on-flash
+                format for fastmap may change in the next kernel versions
+
+                Fastmap is a mechanism which allows attaching an UBI device
+                in nearly constant time. Instead of scanning the whole MTD device it
+                only has to locate a checkpoint (called fastmap) on the device.
+                The on-flash fastmap contains all information needed to attach
+                the device. Using fastmap makes only sense on large devices where
+                attaching by scanning takes long. UBI will not automatically install
+                a fastmap on old images, but you can set the UBI module parameter
+                fm_autoconvert to 1 if you want so. Please note that fastmap-enabled
+                images are still usable with UBI implementations without
+                fastmap support. On typical flash devices the whole fastmap fits
+                into one PEB. UBI will reserve PEBs to hold two fastmaps.
+
+                If in doubt, say "N".
+
+            config MTD_UBI_BLOCK
+                bool "Read-only block devices on top of UBI volumes"
+                default n
+                depends on BLOCK
+                help
+                This option enables read-only UBI block devices support. UBI block
+                devices will be layered on top of UBI volumes, which means that the
+                UBI driver will transparently handle things like bad eraseblocks and
+                bit-flips. You can put any block-oriented file system on top of UBI
+                volumes in read-only mode (e.g., ext4), but it is probably most
+                practical for read-only file systems, like squashfs.
+
+                When selected, this feature will be built in the UBI driver.
+
+                If in doubt, say "N".
+
+            config UBIFS_FS
+                tristate "UBIFS file system support"
+                select CRC16
+                select CRC32
+                select CRYPTO if UBIFS_FS_ADVANCED_COMPR
+                select CRYPTO if UBIFS_FS_LZO
+                select CRYPTO if UBIFS_FS_ZLIB
+                select CRYPTO_LZO if UBIFS_FS_LZO
+                select CRYPTO_DEFLATE if UBIFS_FS_ZLIB
+                select CRYPTO_HASH_INFO
+                depends on RT_USING_MTD_UBI
+                help
+                UBIFS is a file system for flash devices which works on top of UBI.
+
+            if UBIFS_FS
+                config UBIFS_FS_ADVANCED_COMPR
+                    bool "Advanced compression options"
+                    help
+                    This option allows to explicitly choose which compressions, if any,
+                    are enabled in UBIFS. Removing compressors means inability to read
+                    existing file systems.
+
+                    If unsure, say 'N'.
+
+                config UBIFS_FS_LZO
+                    bool "LZO compression support" if UBIFS_FS_ADVANCED_COMPR
+                    default y
+                    help
+                    LZO compressor is generally faster than zlib but compresses worse.
+                    Say 'Y' if unsure.
+
+                config UBIFS_VOLUME_NAME
+                    string "UBIFS default volume name"
+                    default "fhfs"
+                    help
+                    ubifs default volume name.
+
+                config UBIFS_TEST
+                    bool "UBIFS test support"
+                    default n
+                    help
+                    ubifs test functions.
+            endif
+        endif
+
+endif
+
+endmenu

@@ -1,0 +1,37 @@
+menuconfig VIDEO_GRP1
+	bool "Video Group 1"
+	default y
+
+	if VIDEO_GRP1
+		source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/Group_1/ISP_Kconfig"
+
+		source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/Group_1/DSP_Kconfig"
+
+		menu "Network Protocol for sending stream"
+			depends on VIDEO_GRP1 && !UVC_ENABLE
+			config FH_APP_USING_PES_G1
+				bool "Using Pes Pack"
+				default y
+
+			if FH_APP_USING_PES_G1
+				choice
+					prompt "Pes Send Type"
+					default FH_APP_USING_UDP_G1
+
+					config FH_APP_USING_UDP_G1
+					bool "Using UDP"
+
+					config FH_APP_USING_SRT_G1
+					bool "Using SRT"
+				endchoice
+			endif
+
+			config FH_APP_USING_RTSP_G1
+				bool "Using RTSP"
+				default n
+
+			config FH_APP_RECORD_RAW_STREAM_G1
+				bool "Record Raw Stream"
+				default n
+		endmenu
+	endif

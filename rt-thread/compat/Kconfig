@@ -1,0 +1,11 @@
+config SDKROOT
+    string
+    option env="SDKROOT"
+
+menu "Compatibility Interface"
+
+source "$SDKROOT/compat/linux/Kconfig"
+
+source "$SDKROOT/compat/posix/Kconfig"
+
+endmenu

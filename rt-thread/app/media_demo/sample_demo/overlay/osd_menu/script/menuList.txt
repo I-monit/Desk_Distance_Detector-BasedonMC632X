@@ -1,0 +1,8 @@
+main
+ae
+awb
+dayNight
+imageEnhance
+videoOutput
+sleep
+confirm

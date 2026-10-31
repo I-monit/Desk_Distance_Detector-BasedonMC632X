@@ -1,0 +1,11 @@
+mainmenu "Media Demo Configuration"
+
+config ROOT
+	string
+	option env=ROOT
+
+config CHIP_ID
+	string
+	option env=CHIP_ID
+
+source "$ROOT/script/rtt/chip/$CHIP_ID/MainKconfig"

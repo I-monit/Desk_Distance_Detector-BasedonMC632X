@@ -1,0 +1,21 @@
+mainmenu "Fullhan RTOS Configuration"
+
+source "kernel/Kconfig"
+
+source "platform/Kconfig"
+
+source "drivers/Kconfig"
+
+source "compat/Kconfig"
+
+source "fs/Kconfig"
+
+source "net/Kconfig"
+
+source "shell/Kconfig"
+
+source "utils/Kconfig"
+
+source "external/Kconfig"
+
+source "app/Kconfig"

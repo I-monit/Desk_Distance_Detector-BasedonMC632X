@@ -1,0 +1,100 @@
+menu "external components"
+
+config FH_USING_BONJOUR
+    bool "Using bonjour"
+    default n
+    help
+        The bonjour module
+
+# config FH_USING_GUNZIP
+#     bool "Using gunzip"
+#     default n
+
+config FH_USING_MBEDTLS
+    bool "The mbedtls module"
+    default n
+
+config FH_USING_LIBCURL
+    bool "The libcurl module"
+    select FH_USING_MBEDTLS
+    select FH_USING_ZLIB
+    default n
+
+config FH_USING_UDT
+    bool "The udt module"
+    select RT_USING_CPLUSPLUS
+    default n
+
+config FH_USING_SRT
+    bool "The srt module"
+    select RT_USING_CPLUSPLUS
+    default n
+
+    if FH_USING_SRT
+        config FH_ENABLE_ENCRYPTION
+            bool "enable encryption"
+            select FH_USING_MBEDTLS
+            default n
+
+        config FH_EXPERIMENTAL_BONDING
+            bool "enable experimental bonding"
+            default n
+    endif
+
+config FH_USING_MINIUPNPC
+    bool "Using miniupnpc 2.0"
+    default n
+
+config FH_USING_LZMA
+    bool "Using unlzma"
+    default n
+
+config FH_USING_LZOP
+    bool "Using unlzo"
+    default y
+
+config FH_USING_IPERF
+    bool "Using iperf"
+    default n
+
+config FH_USING_ZLIB
+    bool "Using zlib"
+    default y
+
+config FH_USING_CJSON
+    bool "Using cJSON"
+    default n
+
+choice
+    prompt "Select cJSON version"
+    default FH_CJSON_VERSION_RAW
+    depends on FH_USING_CJSON
+
+    config FH_CJSON_VERSION_RAW
+    bool "cJSON RAW"
+
+    config FH_CJSON_VERSION_1_7_13
+    bool "cJSON v1.7.13"
+endchoice
+
+config FH_USING_FHCRC
+    bool "Using fh crc"
+    default n
+
+config FH_USING_MXML
+    bool "Using mxml"
+    default n
+
+config FH_USING_ZBAR
+    bool "Using zbar"
+    default n
+
+config FH_USING_TAR
+    bool "The tar module"
+    default n
+
+config CONFIG_TEST_LIB
+    bool "test library make"
+    default n
+
+endmenu

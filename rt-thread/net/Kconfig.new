@@ -1,0 +1,12 @@
+menu "Network configuration"
+
+config RT_USING_LWIP
+    bool "Enable LwIP v2.1.2"
+    default y
+
+config RT_USING_LWIP_IPV6
+    bool "Enable IPv6 support"
+    depends on RT_USING_LWIP
+    default y
+
+endmenu

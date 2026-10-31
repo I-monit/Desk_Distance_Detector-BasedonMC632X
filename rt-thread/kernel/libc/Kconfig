@@ -1,0 +1,37 @@
+menu "C standard library"
+
+config RT_USING_LIBC
+    bool "Enable libc APIs from toolchain"
+    default y
+if RT_USING_LIBC
+    config RT_USING_NEWLIB
+        bool "Enable newlib"
+        default y
+endif
+
+if RT_USING_LIBC && RT_USING_DFS
+    config RT_USING_POSIX
+        bool "Enable POSIX layer for poll/select, stdin etc"
+        select RT_USING_DFS_DEVFS
+        default y
+
+    if RT_USING_POSIX
+    config RT_USING_POSIX_MMAP
+        bool "Enable mmap() api"
+        default n
+
+    config RT_USING_POSIX_TERMIOS
+        bool "Enable termios feature"
+        default n
+
+    config RT_USING_POSIX_AIO
+        bool "Enable AIO"
+        default n
+    endif
+
+    config RT_USING_TIMEKEEPING
+        bool "Enable timekeeping & hrtimer"
+        default y
+endif
+
+endmenu

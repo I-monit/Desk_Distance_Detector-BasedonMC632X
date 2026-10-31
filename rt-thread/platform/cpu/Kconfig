@@ -1,0 +1,69 @@
+config ARCH_ARM
+    bool
+
+config ARCH_ARM_CORTEX_M
+    bool
+    select ARCH_ARM
+
+config ARCH_ARM_CORTEX_FPU
+    bool
+
+config ARCH_ARM_CORTEX_M0
+    bool
+    select ARCH_ARM_CORTEX_M
+
+config ARCH_ARM_CORTEX_M3
+    bool
+    select ARCH_ARM_CORTEX_M
+
+config ARCH_ARM_MPU
+    bool
+    depends on ARCH_ARM
+
+config ARCH_ARM_CORTEX_M4
+    bool
+    select ARCH_ARM_CORTEX_M
+
+config ARCH_ARM_CORTEX_M7
+    bool
+    select ARCH_ARM_CORTEX_M
+
+config ARCH_ARM_CORTEX_R
+    bool
+    select ARCH_ARM
+
+config ARCH_ARM_MMU
+    bool
+    depends on ARCH_ARM
+
+config ARCH_ARM_ARM9
+    bool
+    select ARCH_ARM
+
+config ARCH_ARM_ARM11
+    bool
+    select ARCH_ARM
+
+config ARCH_ARM_CORTEX_A
+    bool
+    select ARCH_ARM
+    select RT_USING_VFP
+
+config ARCH_ARM_CORTEX_A5
+    bool
+    select ARCH_ARM_CORTEX_A
+
+config ARCH_ARM_CORTEX_A7
+    bool
+    select ARCH_ARM_CORTEX_A
+
+config ARCH_ARM_CORTEX_A8
+    bool
+    select ARCH_ARM_CORTEX_A
+
+config ARCH_ARM_CORTEX_A9
+    bool
+    select ARCH_ARM_CORTEX_A
+
+config ARCH_CPU_STACK_GROWS_UPWARD
+    bool

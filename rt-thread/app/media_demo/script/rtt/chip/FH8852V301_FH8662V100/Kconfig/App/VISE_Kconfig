@@ -1,0 +1,902 @@
+menuconfig FH_APP_OPEN_VISE
+	bool "Open Vise"
+	default n
+
+	if FH_APP_OPEN_VISE
+		choice
+			prompt "Select Demo"
+			default FH_APP_VISE_PIP
+
+			config FH_APP_VISE_PIP
+				bool "Picture in Picture"
+
+			config FH_APP_VISE_LRS
+				bool "Left Right Stitching"
+
+			config FH_APP_VISE_TBS
+				bool "Top Bottom Stitching"
+
+			config FH_APP_VISE_MBS
+				bool "Multi Block Stitching"
+		endchoice
+
+		if FH_APP_VISE_PIP
+			choice
+				prompt "Outside Group Choice"
+				default FH_APP_VISE_OUTSIDE_GRP0
+
+				config FH_APP_VISE_OUTSIDE_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_OUTSIDE_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_OUTSIDE_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Outside Chn Choice"
+				default FH_APP_VISE_OUTSIDE_GRP0_CHN0
+				depends on FH_APP_VISE_OUTSIDE_GRP0
+
+				config FH_APP_VISE_OUTSIDE_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_OUTSIDE_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_OUTSIDE_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Outside Chn Choice"
+				default FH_APP_VISE_OUTSIDE_GRP1_CHN0
+				depends on FH_APP_VISE_OUTSIDE_GRP1
+
+				config FH_APP_VISE_OUTSIDE_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_OUTSIDE_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_OUTSIDE_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Outside Chn Choice"
+				default FH_APP_VISE_OUTSIDE_GRP2_CHN0
+				depends on FH_APP_VISE_OUTSIDE_GRP2
+
+				config FH_APP_VISE_OUTSIDE_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_OUTSIDE_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_OUTSIDE_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Inside Group Choice"
+				default FH_APP_VISE_INSIDE_GRP0
+
+				config FH_APP_VISE_INSIDE_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_INSIDE_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_INSIDE_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Inside Chn Choice"
+				default FH_APP_VISE_INSIDE_GRP0_CHN1
+				depends on FH_APP_VISE_INSIDE_GRP0
+
+				config FH_APP_VISE_INSIDE_GRP0_CHN0
+					depends on !FH_APP_VISE_OUTSIDE_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_INSIDE_GRP0_CHN1
+					depends on !FH_APP_VISE_OUTSIDE_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_INSIDE_GRP0_CHN2
+					depends on !FH_APP_VISE_OUTSIDE_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Inside Chn Choice"
+				default FH_APP_VISE_INSIDE_GRP1_CHN1
+				depends on FH_APP_VISE_INSIDE_GRP1
+
+				config FH_APP_VISE_INSIDE_GRP1_CHN0
+					depends on !FH_APP_VISE_OUTSIDE_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_INSIDE_GRP1_CHN1
+					depends on !FH_APP_VISE_OUTSIDE_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_INSIDE_GRP1_CHN2
+					depends on !FH_APP_VISE_OUTSIDE_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Inside Chn Choice"
+				default FH_APP_VISE_INSIDE_GRP2_CHN1
+				depends on FH_APP_VISE_INSIDE_GRP2
+
+				config FH_APP_VISE_INSIDE_GRP2_CHN0
+					depends on !FH_APP_VISE_OUTSIDE_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_INSIDE_GRP2_CHN1
+					depends on !FH_APP_VISE_OUTSIDE_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_INSIDE_GRP2_CHN2
+					depends on !FH_APP_VISE_OUTSIDE_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+		endif
+
+		if FH_APP_VISE_LRS
+			choice
+				prompt "Left Group Choice"
+				default FH_APP_VISE_LEFT_GRP0
+
+				config FH_APP_VISE_LEFT_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_LEFT_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_LEFT_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Left Chn Choice"
+				default FH_APP_VISE_LEFT_GRP0_CHN0
+				depends on FH_APP_VISE_LEFT_GRP0
+
+				config FH_APP_VISE_LEFT_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Left Chn Choice"
+				default FH_APP_VISE_LEFT_GRP1_CHN1
+				depends on FH_APP_VISE_LEFT_GRP1
+
+				config FH_APP_VISE_LEFT_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Left Chn Choice"
+				default FH_APP_VISE_LEFT_GRP2_CHN1
+				depends on FH_APP_VISE_LEFT_GRP2
+
+				config FH_APP_VISE_LEFT_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Group Choice"
+				default FH_APP_VISE_RIGHT_GRP0
+
+				config FH_APP_VISE_RIGHT_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_RIGHT_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_RIGHT_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Right Chn Choice"
+				default FH_APP_VISE_RIGHT_GRP0_CHN1
+				depends on FH_APP_VISE_RIGHT_GRP0
+
+				config FH_APP_VISE_RIGHT_GRP0_CHN0
+					depends on !FH_APP_VISE_LEFT_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_GRP0_CHN1
+					depends on !FH_APP_VISE_LEFT_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_GRP0_CHN2
+					depends on !FH_APP_VISE_LEFT_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Chn Choice"
+				default FH_APP_VISE_RIGHT_GRP1_CHN1
+				depends on FH_APP_VISE_RIGHT_GRP1
+
+				config FH_APP_VISE_RIGHT_GRP1_CHN0
+					depends on !FH_APP_VISE_LEFT_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_GRP1_CHN1
+					depends on !FH_APP_VISE_LEFT_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_GRP1_CHN2
+					depends on !FH_APP_VISE_LEFT_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Chn Choice"
+				default FH_APP_VISE_RIGHT_GRP2_CHN1
+				depends on FH_APP_VISE_RIGHT_GRP2
+
+				config FH_APP_VISE_RIGHT_GRP2_CHN0
+					depends on !FH_APP_VISE_LEFT_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_GRP2_CHN1
+					depends on !FH_APP_VISE_LEFT_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_GRP2_CHN2
+					depends on !FH_APP_VISE_LEFT_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+		endif
+
+		if FH_APP_VISE_TBS
+			choice
+				prompt "Top Group Choice"
+				default FH_APP_VISE_TOP_GRP0
+
+				config FH_APP_VISE_TOP_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_TOP_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_TOP_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Top Chn Choice"
+				default FH_APP_VISE_TOP_GRP0_CHN0
+				depends on FH_APP_VISE_TOP_GRP0
+
+				config FH_APP_VISE_TOP_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_TOP_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_TOP_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Top Chn Choice"
+				default FH_APP_VISE_TOP_GRP1_CHN1
+				depends on FH_APP_VISE_TOP_GRP1
+
+				config FH_APP_VISE_TOP_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_TOP_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_TOP_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Top Chn Choice"
+				default FH_APP_VISE_TOP_GRP2_CHN1
+				depends on FH_APP_VISE_TOP_GRP2
+
+				config FH_APP_VISE_TOP_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_TOP_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_TOP_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Bottom Group Choice"
+				default FH_APP_VISE_BOTTOM_GRP0
+
+				config FH_APP_VISE_BOTTOM_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_BOTTOM_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_BOTTOM_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Bottom Chn Choice"
+				default FH_APP_VISE_BOTTOM_GRP0_CHN1
+				depends on FH_APP_VISE_BOTTOM_GRP0
+
+				config FH_APP_VISE_BOTTOM_GRP0_CHN0
+					depends on !FH_APP_VISE_TOP_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_BOTTOM_GRP0_CHN1
+					depends on !FH_APP_VISE_TOP_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_BOTTOM_GRP0_CHN2
+					depends on !FH_APP_VISE_TOP_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Bottom Chn Choice"
+				default FH_APP_VISE_BOTTOM_GRP1_CHN1
+				depends on FH_APP_VISE_BOTTOM_GRP1
+
+				config FH_APP_VISE_BOTTOM_GRP1_CHN0
+					depends on !FH_APP_VISE_TOP_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_BOTTOM_GRP1_CHN1
+					depends on !FH_APP_VISE_TOP_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_BOTTOM_GRP1_CHN2
+					depends on !FH_APP_VISE_TOP_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Bottom Chn Choice"
+				default FH_APP_VISE_BOTTOM_GRP2_CHN1
+				depends on FH_APP_VISE_BOTTOM_GRP2
+
+				config FH_APP_VISE_BOTTOM_GRP2_CHN0
+					depends on !FH_APP_VISE_TOP_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_BOTTOM_GRP2_CHN1
+					depends on !FH_APP_VISE_TOP_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_BOTTOM_GRP2_CHN2
+					depends on !FH_APP_VISE_TOP_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+		endif
+
+		if FH_APP_VISE_MBS
+			choice
+				prompt "Left Top Group Choice"
+				default FH_APP_VISE_LEFT_TOP_GRP0
+
+				config FH_APP_VISE_LEFT_TOP_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_LEFT_TOP_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_LEFT_TOP_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Left Top Chn Choice"
+				default FH_APP_VISE_LEFT_TOP_GRP0_CHN0
+				depends on FH_APP_VISE_LEFT_TOP_GRP0
+
+				config FH_APP_VISE_LEFT_TOP_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_TOP_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_TOP_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Left Top Chn Choice"
+				default FH_APP_VISE_LEFT_TOP_GRP1_CHN0
+				depends on FH_APP_VISE_LEFT_TOP_GRP1
+
+				config FH_APP_VISE_LEFT_TOP_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_TOP_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_TOP_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Left Top Chn Choice"
+				default FH_APP_VISE_LEFT_TOP_GRP2_CHN0
+				depends on FH_APP_VISE_LEFT_TOP_GRP2
+
+				config FH_APP_VISE_LEFT_TOP_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_TOP_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_TOP_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Left Bottom Group Choice"
+				default FH_APP_VISE_LEFT_BOTTOM_GRP0
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Left Bottom Chn Choice"
+				default FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN1
+				depends on FH_APP_VISE_LEFT_BOTTOM_GRP0
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Left Bottom Chn Choice"
+				default FH_APP_VISE_LEFT_BOTTOM_GRP1_CHN1
+				depends on FH_APP_VISE_LEFT_BOTTOM_GRP1
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP1_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP1_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP1_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Left Bottom Chn Choice"
+				default FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN1
+				depends on FH_APP_VISE_LEFT_BOTTOM_GRP2
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Top Group Choice"
+				default FH_APP_VISE_RIGHT_TOP_GRP1
+
+				config FH_APP_VISE_RIGHT_TOP_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_RIGHT_TOP_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_RIGHT_TOP_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Right Top Chn Choice"
+				default FH_APP_VISE_RIGHT_TOP_GRP0_CHN0
+				depends on FH_APP_VISE_RIGHT_TOP_GRP0
+
+				config FH_APP_VISE_RIGHT_TOP_GRP0_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN0
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_TOP_GRP0_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN1
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_TOP_GRP0_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN2
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Top Chn Choice"
+				default FH_APP_VISE_RIGHT_TOP_GRP1_CHN0
+				depends on FH_APP_VISE_RIGHT_TOP_GRP1
+
+				config FH_APP_VISE_RIGHT_TOP_GRP1_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP1_CHN0
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_TOP_GRP1_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP1_CHN1
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_TOP_GRP1_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN2
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Top Chn Choice"
+				default FH_APP_VISE_RIGHT_TOP_GRP2_CHN0
+				depends on FH_APP_VISE_RIGHT_TOP_GRP2
+
+				config FH_APP_VISE_RIGHT_TOP_GRP2_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN0
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_TOP_GRP2_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN1
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_TOP_GRP2_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN2
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Bottom Group Choice"
+				default FH_APP_VISE_RIGHT_BOTTOM_GRP1
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP0
+					select VIDEO_GRP0
+					bool "Video Group 0"
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP1
+					select VIDEO_GRP1
+					bool "Video Group 1"
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP2
+					select VIDEO_GRP2
+					bool "Video Group 2"
+			endchoice
+
+			choice
+				prompt "Right Bottom Chn Choice"
+				default FH_APP_VISE_RIGHT_BOTTOM_GRP0_CHN1
+				depends on FH_APP_VISE_RIGHT_BOTTOM_GRP0
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP0_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN0
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN0
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP0_CHN0
+					select CH0_ENABLE_G0
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP0_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN1
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN1
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP0_CHN1
+					depends on !UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP0_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP0_CHN2
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP0_CHN2
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP0_CHN2
+					depends on !UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Top Chn Choice"
+				default FH_APP_VISE_RIGHT_BOTTOM_GRP1_CHN1
+				depends on FH_APP_VISE_RIGHT_TOP_GRP1
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP1_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP1_CHN0
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP1_CHN0
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP1_CHN0
+					depends on !UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP1_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP1_CHN1
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP1_CHN1
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP1_CHN1
+					depends on !UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP1_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN2
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN2
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP1_CHN2
+					depends on !UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					bool "Channel 2"
+			endchoice
+
+			choice
+				prompt "Right Top Chn Choice"
+				default FH_APP_VISE_RIGHT_BOTTOM_GRP2_CHN1
+				depends on FH_APP_VISE_RIGHT_BOTTOM_GRP2
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP2_CHN0
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN0
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN0
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP2_CHN0
+					depends on !UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					bool "Channel 0"
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP2_CHN1
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN1
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN1
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP2_CHN1
+					depends on !UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					bool "Channel 1"
+
+				config FH_APP_VISE_RIGHT_BOTTOM_GRP2_CHN2
+					depends on !FH_APP_VISE_LEFT_TOP_GRP2_CHN2
+					depends on !FH_APP_VISE_LEFT_BOTTOM_GRP2_CHN2
+					depends on !FH_APP_VISE_RIGHT_TOP_GRP2_CHN2
+					depends on !UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					bool "Channel 2"
+			endchoice
+		endif
+	endif
+

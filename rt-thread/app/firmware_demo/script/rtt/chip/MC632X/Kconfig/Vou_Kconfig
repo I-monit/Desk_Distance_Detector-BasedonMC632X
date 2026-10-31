@@ -1,0 +1,178 @@
+menu "VOU"
+	menuconfig DEVICE_DHD0
+		bool "DHD0"
+		default n
+
+		if DEVICE_DHD0
+			choice
+				prompt "External Screen Format"
+				config DHD0_800X480P60
+					bool "800x480P60"
+			endchoice
+
+			choice
+				prompt "External Screen Interface"
+				default DHD0_INTF_LCD
+
+				config DHD0_INTF_LCD
+					bool "LCD"
+			endchoice
+
+			config DHD0_BG_COLOR
+				hex "Dev background color"
+				default 0x00ffffff
+
+			menuconfig DHD0_VIDEO_LAYER0
+				bool "Video Layer"
+				default y
+
+				if DHD0_VIDEO_LAYER0
+					choice
+						prompt "Input Format"
+						default DHD0_VIDEO_LAYER0_INPUT_YUV420
+
+						config DHD0_VIDEO_LAYER0_INPUT_YUV420
+							bool "YUV420"
+					endchoice
+
+					config DHD0_VIDEO_LAYER0_BUFFER_NUM
+						int "Buffer Num"
+						default 2
+
+					config DHD0_VIDEO_LAYER0_START_X
+						int "Video Layer Start Point X"
+						default 0
+
+					config DHD0_VIDEO_LAYER0_START_Y
+						int "Video Layer Start Point Y"
+						default 0
+
+					config DHD0_VIDEO_LAYER0_WIDTH
+						int "Video Layer Width"
+						default 800
+
+					config DHD0_VIDEO_LAYER0_HEIGHT
+						int "Video Layer Height"
+						default 480
+
+					menuconfig DHD0_VIDEO_LAYER0_CHN0
+						bool "CHN0"
+						default n
+
+						if DHD0_VIDEO_LAYER0_CHN0
+							menu "CHN0 Config"
+								config DHD0_VIDEO_LAYER0_CHN0_X
+									int "CH0 Start X"
+									default 0
+
+								config DHD0_VIDEO_LAYER0_CHN0_Y
+									int "CH0 Start Y"
+									default 0
+
+								config DHD0_VIDEO_LAYER0_CHN0_WIDTH
+									int "CH0 Width"
+									default 800
+
+								config DHD0_VIDEO_LAYER0_CHN0_HEIGHT
+									int "CH0 Height"
+									default 480
+							endmenu
+
+							menu "Bind Info"
+								choice
+									prompt "Group Bind"
+
+									config DHD0_CHN0_BIND_G0
+										select VIDEO_GRP0
+										bool "Video Group 0"
+
+									config DHD0_CHN0_BIND_G1
+										select VIDEO_GRP1
+										bool "Video Group 1"
+								endchoice
+
+								if DHD0_CHN0_BIND_G0
+									choice
+										prompt "Channel Bind"
+
+										config CH0_BIND_VOU_DHD0_CHN0_G0
+											select CH0_ENABLE_G0
+											bool "Channel 0"
+
+										config CH1_BIND_VOU_DHD0_CHN0_G0
+											select CH1_ENABLE_G0
+											bool "Channel 1"
+									endchoice
+								endif
+
+								if DHD0_CHN0_BIND_G1
+									choice
+										prompt "Bind Channel"
+
+										config CH0_BIND_VOU_DHD0_CHN0_G1
+											select CH0_ENABLE_G1
+											bool "Channel 0"
+
+										config CH1_BIND_VOU_DHD0_CHN0_G1
+											select CH1_ENABLE_G1
+											bool "Channel 1"
+									endchoice
+								endif
+							endmenu
+						endif
+				endif
+
+			menuconfig DEVICE_DHD0_PIP_LAYER
+				bool "PIP Layer(not support)"
+				default n
+
+			menuconfig DEVICE_DHD0_OSD_LAYER0
+				bool "OSD Layer"
+				default n
+
+				if DEVICE_DHD0_OSD_LAYER0
+					config DEVICE_DHD0_OSD0_START_X
+						int "Start Point X"
+						default 0
+
+					config DEVICE_DHD0_OSD0_START_Y
+						int "Start Point Y"
+						default 0
+
+					config DEVICE_DHD0_OSD0_WIDTH
+						int "Osd Width"
+						default 800
+
+					config DEVICE_DHD0_OSD0_HEIGHT
+						int "Osd Height"
+						default 480
+
+					config DEVICE_DHD0_OSD0_ALPHA
+						int "Osd Alpha"
+						default 128
+
+					config DEVICE_DHD0_OSD0_FILE
+						string "Osd File"
+						default "ARGB8888_800x480.bits"
+
+					choice
+						prompt "Osd File Type"
+						default DEVICE_DHD0_OSD0_FILE_TYPE_ARGB8888
+
+						config DEVICE_DHD0_OSD0_FILE_TYPE_ARGB8888
+							bool "ARGB 8888"
+
+						config DEVICE_DHD0_OSD0_FILE_TYPE_ARGB4444
+							bool "ARGB 4444"
+
+						config DEVICE_DHD0_OSD0_FILE_TYPE_ARGB1555
+							bool "ARGB 1555"
+					endchoice
+				endif
+		endif
+
+
+	menuconfig DEVICE_DSD0
+		bool "DSD0(not support)"
+		default n
+endmenu

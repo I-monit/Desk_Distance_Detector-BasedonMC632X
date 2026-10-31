@@ -1,0 +1,149 @@
+menuconfig UVC_ENABLE
+	bool "UVC enable"
+	select VIDEO_GRP0
+	select CH0_ENABLE_G0
+	select CH0_MJPEG_G0
+	select FH_APP_OPEN_OVERLAY
+	default n
+
+	if UVC_ENABLE
+		config FH_APP_UVC_PARAM_HISTORY
+			bool "enable uvc param history"
+			default n
+
+		config FH_APP_UVC_BULK_MODE
+			bool "using uvc bulk-ep mode"
+			default n
+
+		config FH_APP_UVC_HIGH_BANDWIDTH
+			bool "enable uvc high bandwidth"
+			default y
+
+		config UVC_CLASS_REV_1_5_SUPPORT
+			bool "enable uvc 1.5 revision"
+			default n
+
+		config UVC_DOUBLE_STREAM
+			bool "enable uvc double stream"
+			default n
+
+		choice
+			prompt "uvc double stream choose"
+			depends on UVC_DOUBLE_STREAM
+			default UVC_OTHER_VIDEO_STREAM
+
+			config UVC_OTHER_VIDEO_STREAM
+				bool "uvc other video stream"
+
+			config UVC_WINDOWS_HELLO_FACE
+				select UVC_CLASS_REV_1_5_SUPPORT
+				bool "uvc windows hello face"
+		endchoice
+
+		if UVC_OTHER_VIDEO_STREAM || UVC_WINDOWS_HELLO_FACE
+			choice
+			prompt "Dual Stream Group"
+			default UVC_DUAL_STREAM_GRP0
+
+			config UVC_DUAL_STREAM_GRP0
+				select VIDEO_GRP0
+				bool "Video Group 0"
+
+			config UVC_DUAL_STREAM_GRP1
+				select VIDEO_GRP1
+				bool "Video Group 1"
+
+			config UVC_DUAL_STREAM_GRP2
+				select VIDEO_GRP2
+				bool "Video Group 2"
+			endchoice
+
+			if UVC_DUAL_STREAM_GRP0
+				choice
+				prompt "Dual Stream Channel"
+				default UVC_DUAL_STREAM_GRP0_CHN1
+
+				config UVC_DUAL_STREAM_GRP0_CHN1
+					select CH1_ENABLE_G0
+					select CH1_MJPEG_G0
+					bool "Channel 1"
+
+				config UVC_DUAL_STREAM_GRP0_CHN2
+					select CH2_ENABLE_G0
+					select CH2_MJPEG_G0
+					bool "Channel 2"
+				endchoice
+			endif
+
+			if UVC_DUAL_STREAM_GRP1
+				choice
+				prompt "Other Video Channel"
+				default UVC_DUAL_STREAM_GRP1_CHN0
+
+				config UVC_DUAL_STREAM_GRP1_CHN0
+					select CH0_ENABLE_G1
+					select CH0_MJPEG_G1
+					bool "Channel 0"
+
+				config UVC_DUAL_STREAM_GRP1_CHN1
+					select CH1_ENABLE_G1
+					select CH1_MJPEG_G1
+					bool "Channel 1"
+
+				config UVC_DUAL_STREAM_GRP1_CHN2
+					select CH2_ENABLE_G1
+					select CH2_MJPEG_G1
+					bool "Channel 2"
+				endchoice
+			endif
+
+			if UVC_DUAL_STREAM_GRP2
+				choice
+				prompt "Other Video Channel"
+				default UVC_DUAL_STREAM_GRP2_CHN0
+
+				config UVC_DUAL_STREAM_GRP2_CHN0
+					select CH0_ENABLE_G2
+					select CH0_MJPEG_G2
+					bool "Channel 0"
+
+				config UVC_DUAL_STREAM_GRP2_CHN1
+					select CH1_ENABLE_G2
+					select CH1_MJPEG_G2
+					bool "Channel 1"
+
+				config UVC_DUAL_STREAM_GRP2_CHN2
+					select CH2_ENABLE_G2
+					select CH2_MJPEG_G2
+					bool "Channel 2"
+				endchoice
+			endif
+		endif
+
+		config UVC_STILL_IMAGE_CAPTURE_METHOD2
+			depends on STILL_CAPTURE_SUPPORT
+			bool "enable uvc still capture"
+			default n
+
+		config USB_AUDIO_ENABLE
+			bool "enable usb_audio"
+			default y
+
+		if USB_AUDIO_ENABLE
+			config ENABLE_SPEAKER_DESC
+				bool "Enable uac speaker"
+				default n
+		endif
+
+		config USB_HID_ENABLE
+			bool "enable HID"
+			default n
+
+		config USB_CDC_ENABLE
+			bool "enable CDC"
+			default n
+
+		config FH_APP_USING_HEX_PARA
+			bool "using uvc flash option"
+			default n
+	endif

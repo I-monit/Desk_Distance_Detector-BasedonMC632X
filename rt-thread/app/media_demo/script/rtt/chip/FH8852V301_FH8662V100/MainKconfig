@@ -1,0 +1,39 @@
+config EMU
+	bool "emulation enable"
+	default n
+
+config CONFIG_VICAP_OFFLINE_MODE
+	bool "sensor offline enable"
+	default n
+
+config CONFIG_SENSOR_SLAVE_MODE
+	bool "sensor salve mode"
+	default n
+
+source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/Uvc_Kconfig"
+
+source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/App_Kconfig"
+
+source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/Group_0/Group_Kconfig"
+
+source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/Group_1/Group_Kconfig"
+
+config FH_APP_USING_COOLVIEW
+	bool "Open Coolview"
+	default n
+
+	if FH_APP_USING_COOLVIEW
+		choice
+			prompt "Select Coolview type"
+				default FH_APP_TCP_COOLVIEW
+
+			config FH_APP_TCP_COOLVIEW
+				bool "using tcp coolview"
+
+			config FH_APP_CDC_COOLVIEW
+				depends on UVC_ENABLE
+				select USB_CDC_ENABLE
+				bool "using usb_vcom coolview"
+		endchoice
+	endif
+

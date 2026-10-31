@@ -1,0 +1,11 @@
+config SDKROOT
+    string
+    option env="SDKROOT"
+
+# menu "Pthread Interface"
+
+config RT_USING_PTHREADS
+    bool "Enable pthreads APIs"
+    default y
+
+# endmenu

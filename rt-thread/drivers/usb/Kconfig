@@ -1,0 +1,356 @@
+menu "Usb configuration"
+comment "choose only one(usb host/device mode)"
+
+config RT_USING_USB
+    bool "Enable usb driver"
+    default y
+
+if RT_USING_USB
+
+choice
+    prompt "Choose usb mode"
+    default RT_USING_UDC
+
+    config RT_USING_UHC
+        bool "Enable usb host mode core"
+
+    config RT_USING_UDC
+        bool "Enable usb device mode core"
+endchoice
+
+	if RT_USING_UHC
+        config RT_USING_FH_USBOTG
+            bool "usb host controller enable"
+            default n
+
+        config RT_USING_USB_MAC
+            bool "usb ethernet enable"
+            default n
+
+            if RT_USING_USB_MAC
+                config USB_MAC_USING_ASIX
+                    bool "usb ethernet select asix device"
+                    default n
+
+                config RT_USING_USB_RNDIS
+                    bool "usb ethernet select rndis device"
+                    default n
+
+                config RT_USING_USB_ECM
+                    bool "usb ethernet select ecm device"
+                    default n
+            endif
+
+        config RT_USING_USB_TEST
+            bool "usb test enable"
+            default n
+
+        config RT_USING_USB_SERIAL
+            bool "usb serial enable"
+            default n
+
+        config RT_USING_USB_CDC_ACM
+            bool "usb cdc-acm enable"
+            default n
+
+        config RT_USING_USB_SERIAL_POSIX
+            depends on RT_USING_USB_SERIAL || RT_USING_USB_CDC_ACM
+            bool "enable serial or cdc posix"
+            default n
+
+    endif
+
+    if RT_USING_UDC
+		choice
+		    prompt "Choose udc driver"
+		    default FH_RT_USB_DEVICE
+
+		    config RT_USING_USB_DEVICE
+		        bool "Enable rtt udc native driver"
+
+		    config FH_RT_USB_DEVICE
+		        bool "Enable rtt udc custom driver"
+		endchoice
+
+		if RT_USING_USB_DEVICE
+			config RT_USBD_THREAD_STACK_SZ
+                int "usb thread stack size"
+                default 4096
+            config USB_VENDOR_ID
+                hex "USB Vendor ID"
+                default 0x0EFF
+            config USB_PRODUCT_ID
+                hex "USB Product ID"
+                default 0x0001
+            config RT_USB_DEVICE_COMPOSITE
+                bool "Enable composite device"
+                default n
+                choice
+                    prompt "Device type"
+                    default _RT_USB_DEVICE_NONE
+                    depends on !RT_USB_DEVICE_COMPOSITE
+                    config _RT_USB_DEVICE_NONE
+                        bool "Using custom class by register interface"
+                        select RT_USB_DEVICE_NONE
+                    config _RT_USB_DEVICE_CDC
+                        bool "Enable to use device as CDC device"
+                        select RT_USB_DEVICE_CDC
+                    config _RT_USB_DEVICE_MSTORAGE
+                        bool "Enable to use device as Mass Storage device"
+                        select RT_USB_DEVICE_MSTORAGE
+                    config _RT_USB_DEVICE_HID
+                        bool "Enable to use device as HID device"
+                        select RT_USB_DEVICE_HID
+                    config _RT_USB_DEVICE_RNDIS
+                        bool "Enable to use device as rndis device"
+                        select RT_USB_DEVICE_RNDIS
+                        depends on RT_USING_LWIP
+                    config _RT_USB_DEVICE_ECM
+                        bool "Enable to use device as ecm device"
+                        select RT_USB_DEVICE_ECM
+                        depends on RT_USING_LWIP
+                    config _RT_USB_DEVICE_WINUSB
+                        bool "Enable to use device as winusb device"
+                        select RT_USB_DEVICE_WINUSB
+                endchoice
+                if RT_USB_DEVICE_COMPOSITE
+                    config RT_USB_DEVICE_CDC
+                        bool "Enable to use device as CDC device"
+                        default n
+                    config RT_USB_DEVICE_NONE
+                        bool
+                        default y
+                    config RT_USB_DEVICE_MSTORAGE
+                        bool "Enable to use device as Mass Storage device"
+                        default n
+                    config RT_USB_DEVICE_HID
+                        bool "Enable to use device as HID device"
+                        default n
+                    config RT_USB_DEVICE_RNDIS
+                        bool "Enable to use device as rndis device"
+                        default n
+                        depends on RT_USING_LWIP
+                    config RT_USB_DEVICE_ECM
+                        bool "Enable to use device as ecm device"
+                        default n
+                        depends on RT_USING_LWIP
+                    config RT_USB_DEVICE_WINUSB
+                        bool "Enable to use device as winusb device"
+                        default n
+                endif
+                if RT_USB_DEVICE_CDC
+                    config RT_VCOM_TASK_STK_SIZE
+                        int "virtual com thread stack size"
+                        default 1024
+                    config RT_VCOM_TX_USE_DMA
+                        bool "Enable to use dma for vcom tx"
+                        default n
+                    config RT_VCOM_SERNO
+                        string "serial number of virtual com"
+                        default "32021919830108"
+                    config RT_VCOM_SER_LEN
+                        int "serial number length of virtual com"
+                        default 14
+                    config RT_VCOM_TX_TIMEOUT
+                        int "tx timeout(ticks) of virtual com"
+                        default 1000
+                endif
+                if RT_USB_DEVICE_WINUSB
+                    config RT_WINUSB_GUID
+                    string "Guid for winusb"
+                    default "{6860DC3C-C05F-4807-8807-1CA861CC1D66}"
+                endif
+                if RT_USB_DEVICE_MSTORAGE
+                    config RT_USB_MSTORAGE_DISK_NAME
+                    string "msc class disk name"
+                    default "sd0"
+                endif
+                if RT_USB_DEVICE_HID
+                    config RT_USB_DEVICE_HID_KEYBOARD
+                        bool "Use to HID device as Keyboard"
+                        default y
+                    if RT_USB_DEVICE_HID_KEYBOARD
+                        config RT_USB_DEVICE_HID_KEYBOARD_NUMBER
+                        int "Number of Keyboard(max 3)"
+                        default 1
+                        range 1 3
+                    endif
+                    config RT_USB_DEVICE_HID_MOUSE
+                        bool "Use to HID device as Mouse"
+                        default n
+                    config RT_USB_DEVICE_HID_GENERAL
+                        bool "Use to HID device as General HID device"
+                        default n
+                        if RT_USB_DEVICE_HID_GENERAL
+                            config RT_USB_DEVICE_HID_GENERAL_OUT_REPORT_LENGTH
+                                int "General HID device out report length"
+                                default 63
+                                range 0 63
+
+                            config RT_USB_DEVICE_HID_GENERAL_IN_REPORT_LENGTH
+                                int "General HID device in report length"
+                                default 63
+                                range 0 63
+                        endif
+                    config RT_USB_DEVICE_HID_MEDIA
+                        bool "Use to HID device as media keyboard"
+                        default n
+                endif
+		endif
+
+    	if FH_RT_USB_DEVICE
+	        config FH_RT_USB_DEVICE_COMPOSITE
+	            bool "Enable composite device"
+	            default y
+
+	            if FH_RT_USB_DEVICE_COMPOSITE
+	                config FH_RT_USB_DEVICE_UVC
+	                    bool "Enable to use device as usb webcam"
+	                    #select RT_USING_DMA_MEMCPY
+	                    default y
+
+	                config FH_RT_USB_DEVICE_UAC
+	                    bool "Enable to use device as usb audio"
+	                    select FH_USING_VBUS
+	                    select FH_USING_ACW
+	                    default n
+
+	                config FH_RT_USB_DEVICE_CDC
+	                    bool "Enable to use device as usb cdc"
+	                    default n
+
+                    config FH_RT_USB_DEVICE_HID
+	                    bool "Enable to use device as usb hid"
+	                    default n
+
+                    choice
+			            prompt "Enable MSTORAGE or RNDIS"
+			            default FH_RT_USB_DEVICE_NONE
+
+                        config FH_RT_USB_DEVICE_NONE
+                            bool "Enable none"
+
+                        config FH_RT_USB_DEVICE_MSTORAGE
+	                        bool "Enable to use device as usb mstorage"
+
+                        config FH_RT_USB_DEVICE_RNDIS
+	                        bool "Enable to use device as usb rndis(CDC ethernet)"
+			        endchoice
+
+	            endif
+
+	            config DEVICE_VENDOR_LABEL
+	                string "set device_vendor_label"
+	                default "webcamvendor"
+
+	            config DEVICE_PRODUCT_LABEL
+	                string "set device_product_label"
+	                default "webcamproduct"
+
+	            config DEVICE_SERIALNUM_LABEL
+	                string "set device_serialnum_label"
+	                default "00000000"
+
+	            if FH_RT_USB_DEVICE_UVC
+	                config UVC_STRING_ASSOCIATION
+	                    string "Usb Video Device Name"
+	                    default "usb-webcam"
+
+	                config UVC_DOUBLE_STREAM
+				        bool "enable double uvc stream device"
+				        default n
+
+                    config UVC_SUPPORT_WINDOWS_HELLO_FACE
+                        depends on UVC_DOUBLE_STREAM
+                        bool "windows hello face authentication support"
+                        default n
+				    choice
+			            prompt "Choose UVC EP type"
+			            default FH_RT_UVC_EP_TYPE_ISOC
+
+			            config FH_RT_UVC_EP_TYPE_BULK
+			                bool "UVC stream using bulk-ep"
+
+			            config FH_RT_UVC_EP_TYPE_ISOC
+			                bool "UVC stream using isoc-ep"
+			        endchoice
+	            endif
+
+	            if FH_RT_UVC_EP_TYPE_ISOC
+			        config UVC_PACKET_SIZE
+			            default 1024
+
+			        config ISOC_HIGH_BANDWIDTH_EP
+			            bool "Enable ISOC HIGH BADNWIDTH"
+			            default n
+			    endif
+
+			    if FH_RT_UVC_EP_TYPE_BULK
+			        config UVC_PACKET_SIZE
+			            int "UVC ep maxpacket size, 16 ~ 512"
+			            default 512
+
+			        config UVC_BULK_PAYLOAD_PACKET_NUM
+			            int "uvc stream payload packet num, x maxpacket size, 1 ~ 100"
+			            default 10
+			    endif
+
+	            if FH_RT_USB_DEVICE_UAC
+	                config UAC_STR_ASSOCIATION
+	                    string "Usb Audio Device Name"
+	                    default "usb-audio"
+
+	                config ENABLE_SPEAKER_DESC
+			            bool "Enable uac speaker"
+			            default n
+	            endif
+
+                if FH_RT_USB_DEVICE_HID
+                    config RT_USB_DEVICE_HID_KEYBOARD
+                        bool "Use to HID device as Keyboard"
+                        default y
+                    if RT_USB_DEVICE_HID_KEYBOARD
+                        config RT_USB_DEVICE_HID_KEYBOARD_NUMBER
+                        int "Number of Keyboard(max 3)"
+                        default 1
+                        range 1 3
+                    endif
+
+                    config RT_USB_DEVICE_HID_KEYBOARD_CONSUMER
+                        bool "Use to HID device as consumer"
+                        default n
+
+                    config RT_USB_DEVICE_HID_MOUSE
+                        bool "Use to HID device as Mouse"
+                        default n
+
+                    config RT_USB_DEVICE_HID_GENERAL
+                        bool "Use to HID device as General HID device"
+                        default n
+
+
+                    config RT_USB_DEVICE_HID_TELEPHONY
+                        bool "Use to HID device as Telephony device"
+                        default n
+
+                        if RT_USB_DEVICE_HID_GENERAL
+                            config RT_USB_DEVICE_HID_GENERAL_OUT_REPORT_LENGTH
+                                int "General HID device out report length"
+                                default 63
+                                range 0 63
+
+                            config RT_USB_DEVICE_HID_GENERAL_IN_REPORT_LENGTH
+                                int "General HID device in report length"
+                                default 63
+                                range 0 63
+                        endif
+                    config RT_USB_DEVICE_HID_MEDIA
+                        bool "Use to HID device as media keyboard"
+                        default n
+                endif
+		endif
+	endif
+endif
+
+endmenu
+

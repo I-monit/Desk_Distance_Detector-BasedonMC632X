@@ -1,0 +1,9 @@
+menu "VPU Config"
+	depends on VIDEO_GRP0
+
+	source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/Group_0/VPU_CH0_Kconfig"
+
+	source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/Group_0/VPU_CH1_Kconfig"
+
+	source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/Group_0/VPU_CH2_Kconfig"
+endmenu

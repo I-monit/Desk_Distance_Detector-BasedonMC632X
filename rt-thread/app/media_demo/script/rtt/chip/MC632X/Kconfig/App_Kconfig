@@ -1,0 +1,237 @@
+menu "APP config"
+	config FH_APP_GRP_ID
+		int "App Group"
+		default 0
+
+	menuconfig FH_APP_OPEN_OVERLAY
+		bool "Open Overlay"
+		default n
+
+		if FH_APP_OPEN_OVERLAY
+			config FH_APP_OVERLAY_LOGO
+				bool "Logo"
+				default n
+
+			config FH_APP_OVERLAY_GBOX
+				bool "G Box"
+				default y
+
+			config FH_APP_OVERLAY_GBOX_TWOBUF
+				depends on FH_APP_OVERLAY_GBOX
+				bool "Gbox Use Two Buffer"
+				default y
+
+			config FH_APP_OVERLAY_GBOX_BIT
+				depends on FH_APP_OVERLAY_GBOX
+				int "Gbox Use (1/2/4/8) Pixelbit"
+				default 2
+
+			config FH_APP_OVERLAY_TOSD
+				bool "Tosd"
+				default y
+
+			config FH_APP_OVERLAY_TOSD_MENU
+				depends on FH_APP_OVERLAY_TOSD
+				bool "Tosd Menu"
+				default n
+
+			config FH_APP_OVERLAY_TOSD_TWOBUF
+				depends on FH_APP_OVERLAY_TOSD
+				bool "Tosd Use Two Buffer"
+				default y
+
+			config FH_APP_OVERLAY_MASK
+				bool "Mask"
+				default n
+	endif
+
+	menuconfig FH_APP_OPEN_VENC
+		bool "Open Venc"
+		default n
+
+	if FH_APP_OPEN_VENC
+		config FH_APP_CHANGE_DSP_RESOLUTION
+			depends on !UVC_ENABLE
+			bool "Change DSP Resolution"
+			default n
+
+		config FH_APP_CHANGE_ISP_FPS
+			depends on !UVC_ENABLE
+			bool "Change ISP FPS"
+			default n
+
+		config FH_APP_CHANGE_ISP_RESOLUTION
+			depends on !UVC_ENABLE
+			bool "Change ISP Resolution"
+			default n
+
+		config FH_APP_ENC_ROTATE
+			bool "ENC Rotate"
+			default n
+
+		config FH_APP_CAPTURE_JPEG
+			bool "Capture JPEG"
+			default y
+
+			if FH_APP_CAPTURE_JPEG
+				config FH_APP_JPEG_FPS
+					int "Capture JPEG FPS"
+					default 1
+			endif
+
+		config FH_APP_TOOGLE_FREEZE
+			bool "Toogle Freeze"
+			default n
+	endif
+
+	menuconfig FH_APP_OPEN_ISP_STRATEGY_DEMO
+		bool "Open Isp strategy demo"
+		default n
+
+	if FH_APP_OPEN_ISP_STRATEGY_DEMO
+		config FH_APP_ISP_MIRROR_FLIP
+			bool "Mirror & Flip"
+			default n
+
+		config FH_APP_CHANGE_AE_MODE
+			bool "AE mode"
+			default n
+
+		config FH_APP_CHANGE_NPMODE
+			bool "N/P Sharpness"
+			default n
+
+		config FH_APP_CHANGE_SATURATION
+			bool "Change Saturation"
+			default n
+
+		config FH_APP_CHANGE_CHROMA
+			bool "Change Chroma"
+			default n
+	endif
+
+	menuconfig FH_APP_OPEN_MOTION_DETECT
+		bool "Open Motion Detect(Full Screen)"
+		default n
+
+		if FH_APP_OPEN_MOTION_DETECT
+			config FH_APP_OPEN_MOTION_DETECT_DUMP_RESULT
+				select FH_APP_OPEN_OVERLAY
+				bool "Print Detect Result on Serial Port"
+				default n
+		endif
+
+	menuconfig FH_APP_OPEN_RECT_MOTION_DETECT
+		bool "Open Motion Detect(User Configured area)"
+		default n
+
+		if FH_APP_OPEN_RECT_MOTION_DETECT
+			config FH_APP_OPEN_RECT_MOTION_DETECT_DUMP_RESULT
+				bool "Print Detect Result on Serial Port"
+				default n
+		endif
+
+	menuconfig FH_APP_OPEN_COVER_DETECT
+		bool "Open Cover Detect"
+		default n
+
+		if FH_APP_OPEN_COVER_DETECT
+			config FH_APP_OPEN_COVER_DETECT_DUMP_RESULT
+				bool "Print Detect Result on Serial Port"
+				default n
+		endif
+
+	source "$ROOT/script/rtt/chip/$CHIP_ID/Kconfig/App/VISE_Kconfig"
+
+	choice
+		prompt "FH NNA APP List"
+		depends on (CH2_ENABLE_G0 || CH2_ENABLE_G1)
+		default FH_NN_PERSON_DETECT
+
+		config FH_NN_PERSON_DETECT_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do Person Detect"
+
+		config FH_NN_C2D_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do Person & vehicle Detect"
+
+		config FH_NN_FACE_DET_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do face Detect"
+
+		config FH_NN_WHD_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do wave hand detect"
+
+		config FH_NN_GESTURE_REC_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do gesture Recognition"
+
+		config FH_NN_FACE_SNAP_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do Face Evaluation"
+
+		config FH_NN_FACE_REC_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do Face Recognition"
+
+		config FH_NN_PVF_DET_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do PVF Detect"
+
+		config FH_NN_LP_REC_ENABLE
+			select FH_APP_OPEN_OVERLAY
+			bool "Do LP Recognition"
+	endchoice
+
+	config FH_NN_FACE_FEATURE_LOCATE_ENABLE
+		depends on FH_NN_PERSON_DETECT_ENABLE
+		select FH_APP_OPEN_OVERLAY
+		bool "Do Face Feature Locate"
+
+	if FH_NN_PERSON_DETECT_ENABLE || FH_NN_C2D_ENABLE || FH_NN_FACE_DET_ENABLE
+		config FH_NN_DET_FPS
+			int "NN Det FPS"
+			default 5
+
+		menuconfig FH_APP_OPEN_IVS
+			select FH_APP_OPEN_OVERLAY
+			bool "Open Trip & Peri Detect"
+			default n
+
+			if FH_APP_OPEN_IVS
+				config FH_APP_TRIP_NUM
+					int "Trip Num(0 - 2)"
+					default 1
+
+				config FH_APP_PERI_NUM
+					int "Peri Num(0 - 2)"
+					default 1
+			endif
+	endif
+
+	if FH_NN_FACE_REC_ENABLE || FH_NN_FACE_SNAP_ENABLE
+		config FH_FACE_CAPTURE_TH
+		int "Face Capture Thresh"
+		default 550
+
+		config FH_FACE_ROLL_TH
+		int "Face Roll Thresh"
+		default 45
+
+		config FH_FACE_YAW_TH
+		int "Face Yaw Thresh"
+		default 45
+
+		config FH_FACE_PITCH_TH
+		int "Face Pitch Thresh"
+		default 45
+	endif
+
+	if FH_NN_FACE_REC_ENABLE
+		config FH_FACE_REC_MODE
+		int "Face Recgnition Mode(0:Save 1:Recgnition)"
+		default 0
+	endif
+endmenu

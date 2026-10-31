@@ -1,0 +1,110 @@
+使用方法
+
+1. 在当前目录下使用make menuconfig进行系统配置，选择芯片及板级，生成.config和rtconfig.h
+2. 选择app工程，根据需要配置app（自行创建的app工程，需要修改build/rtt_config.mk，增加用户选择项才可以选择）
+3. 对于自行创建的app，Makefile可以仿其它app工程进行编写
+4. 执行make进行SDK库的编译，生成各种中间库，存放在out/lib目录下
+5. 执行make app进行Demo编译，编译结果缺省存放在$(APP)/out/bin目录，用户可以配置OUT来指定编译输出存放路径
+   注意：OUT不能使用相对路径，需要使用绝对路径
+
+app说明：
+1. 系统需要根据选择的平台配置app，选择适合的sensor
+2. sensor参数在应用层进行加载/配置，因此，选择了sensor后，需要确认对应的参数文件存在，否则，链接出错
+3. SDK附带的media_demo支持menuconfig，可以在根目录下运行make appconfig来启动
+4. 如果编译报告找不到rtconfig_app.h，则需要通过运行make appconfig来生成rtconfig_app.h
+5. 每个Demo都有特定的板级依赖，对于SDK代码，请先确保配置正确，再编译Demo
+
+shell支持：
+  SDKv3全面支持msh命令，替代原有的finsh，缺省支持以下命令：
+  vlcview          - vlcview()
+  fh_chip_info     - print chip infomation
+  media_info       - read/write media status information
+  cmm_mem_proc     - get cmm memory status information
+  pinctrl          - device pin mux control
+  fal              - FAL(Flash Abstraction Layer) operate.
+  date             - get date and time or set [year month day hour min sec]
+  reboot           - Reboot system
+  find             - find files in filesystem. run "find -h" for more information.
+  top              - provide a view of process activity in real time
+  ethtool          - query or control network driver and hardware settings
+  touch            - touch file
+  netstat          - list the information of TCP / IP
+  ifconfig         - list the information of network interfaces
+  dns              - list the information of dns
+  ping             - send ICMP ECHO_REQUEST to network hosts
+  dhcpc            - dhcpc start/stop
+  memrw            - memory read/write operation
+  os_list          - list os kernel object info
+  version          - show RT-Thread version information
+  help             - RT-Thread shell help.
+  free             - Show the memory usage in the system.
+  ps               - List threads in the system.
+  echo             - echo string to file
+  umount           - Umount filesystem.
+  mount            - Mount filesystem.
+  df               - disk free
+  mkfs             - format disk with file system
+  mkdir            - Create the DIRECTORY.
+  pwd              - Print the name of the current working directory.
+  cd               - Change the shell working directory.
+  rm               - Remove(unlink) the FILE(s).
+  cat              - Concatenate FILE(s)
+  mv               - Rename SOURCE to DEST.
+  cp               - Copy SOURCE to DEST.
+  ls               - List information about the FILEs.
+
+新旧命令对照表：
+
+    finsh 命令      |          msh 命令           |            备注/说明            |
+    isp_read_proc   |      media_info -r isp      |         vpu/enc/nna/jpeg 同         |
+    isp_write_proc  |  media_info -w isp setting  |         vpu/enc/nna/jpeg 同         |
+    media_mem_proc  |      media_info -r mem      |     media_info -h查看命令帮助   |
+    list_device     |         os_list -d          |     os_list -h 查看命令帮助     |
+    list_thread     |         os_list -t          |     os_list -h 查看命令帮助     |
+    list_timer      |         os_list -c          |     os_list -h 查看命令帮助     |
+    list_mempool    |         os_list -m          |     os_list -h 查看命令帮助     |
+    list_memheap    |         os_list -p          |     os_list -h 查看命令帮助     |
+    list_msgqueue   |         os_list -q          |     os_list -h 查看命令帮助     |
+    list_mailbox    |         os_list -b          |     os_list -h 查看命令帮助     |
+    list_mutex      |         os_list -x          |     os_list -h 查看命令帮助     |
+    list_event      |         os_list -e          |     os_list -h 查看命令帮助     |
+    list_semaphore  |         os_list -s          |     os_list -h 查看命令帮助     |
+    list_fd         |         os_list -f          |                                 |
+    fh_clk_debug    |         os_list -k          |     os_list -h 查看命令帮助     |
+    list_mem        |            free             |                                 |
+    vlcview         |    vlcview -i ip -p port    |                                 |
+    vlcview_exit    |         vlcview -q          |                                 |
+    set_mac         |          ifconfig           |     ifconfig -h 查看命令帮助    |
+    set_if          |          ifconfig           |     ifconfig -h 查看命令帮助    |
+    iperf3_tcp_c    |          iperf3 -c          |      iperf3 -h 查看命令帮助     |
+    iperf3_server   |          iperf3 -s          |      iperf3 -h 查看命令帮助     |
+    iperf3_udp_c    |          iperf3 -c -u       |      iperf3 -h 查看命令帮助     |
+    iperf           |          iperf2 -c          |      iperf2 -h 查看命令帮助     |
+    iperf_server    |          iperf2 -s          |      iperf2 -h 查看命令帮助     |
+    disp_memory     |      memrw -r addr len      |                                 |
+    set_memory      |      memrw -w addr val      |                                 |
+    dhcpc_start     |     dhcpc start if_name     |                                 |
+    dhcpc_stop      |     dhcpc stop if_name      |                                 |
+    vbdq            |           vbus -d           |      vbus -h查看命令帮助        |
+    vbtz            |           vbus -t           |      vbus -h查看命令帮助        |
+    vbque           |           vbus -q           |      vbus -h查看命令帮助        |
+    vbses           |           vbus -s           |      vbus -h查看命令帮助        |
+    vbchn           |           vbus -c           |      vbus -h查看命令帮助        |
+    reset           |           reboot            |                                 |
+    prof_xxxx       |            top              |    prof_init/view/reset/exit    |
+    set_dns         |            dns              |       dns -h查看命令帮助        |
+    ethtool_sset    |         ethtool -s          |      ethtool -h查看命令帮助     |
+    ethtool_gset    |         ethtool -i          |      ethtool -h查看命令帮助     |
+    display_date    |            date             |         date -h 查看帮助        |
+    fh_pinctrl_prt  |         pinctrl -l          |        pinctrl -h查看帮助       |
+    fh_pinctrl_smux |         pinctrl -m          |        pinctrl -h查看帮助       |
+    fh_pinctrl_sdev |         pinctrl -d          |        pinctrl -h查看帮助       |
+    fh_pinctrl_ds   |         pinctrl -f          |        pinctrl -h查看帮助       |
+    fh_pinctrl_pupd |         pinctrl -p          |        pinctrl -h查看帮助       |
+    list            |            help             |                                 |
+    list_udps/tcps  |         无对应命令          |    开发调试临时命令， 已删除    |
+    ethtool_glink   |         无对应命令          |    开发调试临时命令， 已删除    |
+    SRead/SWrite    |         无对应命令          |    开发调试临时命令， 已删除    |
+    dump_mac_err    |         无对应命令          |    开发调试临时命令， 已删除    |
+    dump_tx_desc    |         无对应命令          |    开发调试临时命令， 已删除    |
+    dump_rx_desc    |         无对应命令          |    开发调试临时命令， 已删除    |

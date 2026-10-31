@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2006-2018, RT-Thread Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ */
+#ifndef __RTT_DIRENT_H__
+#define __RTT_DIRENT_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#define DT_UNKNOWN        0x00
+#define DT_REG            0x01
+#define DT_DIR            0x02
+
+typedef struct
+{
+    int fd;                            /* directory file */
+    char buf[512];
+    int num;
+    int cur;
+} DIR;
+
+
+struct dirent
+{
+    unsigned char  d_type;                /* The type of the file */
+    unsigned char   d_namlen;            /* The length of the not including the terminating null file name */
+    unsigned short  d_reclen;            /* length of this record */
+    char d_name[256];                /* The null-terminated file name */
+};
+
+int            closedir(DIR *);
+DIR           *opendir(const char *);
+struct dirent *readdir(DIR *);
+/* int            readdir_r(DIR *, struct dirent *, struct dirent **);  */
+void           rewinddir(DIR *);
+void           seekdir(DIR *, long int);
+long           telldir(DIR *);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

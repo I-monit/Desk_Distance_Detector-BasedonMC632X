@@ -1,0 +1,268 @@
+/*
+ * Copyright (c) 2006-2018, RT-Thread Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2010-10-26     Bernard      the first version
+ */
+
+#include <rtthread.h>
+#include "pthread.h"
+
+#define  MUTEXATTR_SHARED_MASK 0x0010
+#define  MUTEXATTR_TYPE_MASK   0x000f
+
+const pthread_mutexattr_t pthread_default_mutexattr = PTHREAD_PROCESS_PRIVATE;
+
+int pthread_mutexattr_init(pthread_mutexattr_t *attr)
+{
+    if (attr)
+    {
+        *attr = pthread_default_mutexattr;
+
+        return 0;
+    }
+
+    return EINVAL;
+}
+RTM_EXPORT(pthread_mutexattr_init);
+
+int pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
+{
+    if (attr)
+    {
+        *attr = -1;
+
+        return 0;
+    }
+
+    return EINVAL;
+}
+RTM_EXPORT(pthread_mutexattr_destroy);
+
+int pthread_mutexattr_gettype(const pthread_mutexattr_t *attr, int *type)
+{
+    if (attr && type)
+    {
+        int  atype = (*attr & MUTEXATTR_TYPE_MASK);
+
+        if (atype >= PTHREAD_MUTEX_NORMAL && atype <= PTHREAD_MUTEX_ERRORCHECK)
+        {
+            *type = atype;
+
+            return 0;
+        }
+    }
+
+    return EINVAL;
+}
+RTM_EXPORT(pthread_mutexattr_gettype);
+
+int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int type)
+{
+    if (attr && type >= PTHREAD_MUTEX_NORMAL && type <= PTHREAD_MUTEX_ERRORCHECK)
+    {
+        *attr = (*attr & ~MUTEXATTR_TYPE_MASK) | type;
+
+        return 0;
+    }
+
+    return EINVAL;
+}
+RTM_EXPORT(pthread_mutexattr_settype);
+
+int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int pshared)
+{
+    if (!attr)
+        return EINVAL;
+
+    switch (pshared)
+    {
+    case PTHREAD_PROCESS_PRIVATE:
+        *attr &= ~MUTEXATTR_SHARED_MASK;
+        return 0;
+
+    case PTHREAD_PROCESS_SHARED:
+        *attr |= MUTEXATTR_SHARED_MASK;
+        return 0;
+    }
+
+    return EINVAL;
+}
+RTM_EXPORT(pthread_mutexattr_setpshared);
+
+int pthread_mutexattr_getpshared(pthread_mutexattr_t *attr, int *pshared)
+{
+    if (!attr || !pshared)
+        return EINVAL;
+
+    *pshared = (*attr & MUTEXATTR_SHARED_MASK) ? PTHREAD_PROCESS_SHARED
+                                               : PTHREAD_PROCESS_PRIVATE;
+    return 0;
+}
+RTM_EXPORT(pthread_mutexattr_getpshared);
+
+int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)
+{
+    rt_err_t result;
+    char name[RT_NAME_MAX];
+    rt_mutex_t mtx;
+    static rt_uint16_t pthread_mutex_number = 0;
+
+    if (!mutex)
+        return EINVAL;
+
+    /* build mutex name */
+    rt_snprintf(name, sizeof(name), "pmtx%02d", pthread_mutex_number ++);
+    if (attr == RT_NULL)
+        mutex->attr = pthread_default_mutexattr;
+    else
+        mutex->attr = *attr;
+
+    mtx = (rt_mutex_t)&(mutex->mtx);
+    /* init mutex lock */
+    result = rt_mutex_init(mtx, name, RT_IPC_FLAG_FIFO);
+    /* result = rt_mutex_init(&(mutex->lock), name, RT_IPC_FLAG_FIFO);  */
+    if (result != RT_EOK)
+        return EINVAL;
+
+    /* detach the object from system object container */
+    rt_object_detach(&mtx->parent.parent);
+    /* rt_object_detach(&(mutex->lock.parent.parent));  */
+    mtx->parent.parent.type = RT_Object_Class_Mutex;
+
+    return 0;
+}
+RTM_EXPORT(pthread_mutex_init);
+
+int pthread_mutex_destroy(pthread_mutex_t *mutex)
+{
+    rt_mutex_t mtx;
+
+    if (!mutex || mutex->attr == -1)
+        return EINVAL;
+
+    /* it's busy */
+    mtx = (rt_mutex_t)&(mutex->mtx);
+    /* if (mutex->lock.owner != RT_NULL)    */
+    if (mtx->owner != RT_NULL)
+        return EBUSY;
+
+    rt_memset(mutex, 0, sizeof(pthread_mutex_t));
+    mutex->attr = -1;
+
+    return 0;
+}
+RTM_EXPORT(pthread_mutex_destroy);
+
+int pthread_mutex_lock(pthread_mutex_t *mutex)
+{
+    int mtype;
+    rt_err_t result;
+    rt_mutex_t mtx;
+
+    if (!mutex)
+        return EINVAL;
+
+    rt_enter_critical();
+
+    if (mutex->attr == -1)
+    {
+        /* init mutex */
+        pthread_mutex_init(mutex, RT_NULL);
+    }
+
+    mtype = mutex->attr & MUTEXATTR_TYPE_MASK;
+    mtx = (rt_mutex_t)&(mutex->mtx);
+    if (mtx->owner == rt_thread_self() &&
+        mtype != PTHREAD_MUTEX_RECURSIVE)
+    {
+        rt_exit_critical();
+
+        return EDEADLK;
+    }
+    rt_exit_critical();
+
+    result = rt_mutex_take(mtx, RT_WAITING_FOREVER);
+    /* result = rt_mutex_take(&(mutex->lock), RT_WAITING_FOREVER);  */
+    if (result == RT_EOK)
+        return 0;
+
+    return EINVAL;
+}
+RTM_EXPORT(pthread_mutex_lock);
+
+int pthread_mutex_unlock(pthread_mutex_t *mutex)
+{
+    rt_err_t result;
+    rt_mutex_t mtx;
+
+    if (!mutex)
+        return EINVAL;
+
+    if (mutex->attr == -1)
+    {
+        /* init mutex */
+        pthread_mutex_init(mutex, RT_NULL);
+    }
+
+    mtx = (rt_mutex_t)&(mutex->mtx);
+    /* if (mutex->lock.owner != rt_thread_self())   */
+    if (mtx->owner != rt_thread_self())
+    {
+        int mtype;
+        mtype = mutex->attr & MUTEXATTR_TYPE_MASK;
+
+        /* error check, return EPERM */
+        if (mtype == PTHREAD_MUTEX_ERRORCHECK)
+            return EPERM;
+
+        /* no thread waiting on this mutex */
+        if (mtx->owner == RT_NULL)
+            return 0;
+    }
+
+    result = rt_mutex_release(mtx);
+    if (result == RT_EOK)
+        return 0;
+    
+    return EINVAL;
+}
+RTM_EXPORT(pthread_mutex_unlock);
+
+int pthread_mutex_trylock(pthread_mutex_t *mutex)
+{
+    rt_err_t result;
+    int mtype;
+    rt_mutex_t mtx;
+
+    if (!mutex)
+        return EINVAL;
+
+    rt_enter_critical();
+
+    if (mutex->attr == -1)
+    {
+        /* init mutex */
+        pthread_mutex_init(mutex, RT_NULL);
+    }
+
+    mtype = mutex->attr & MUTEXATTR_TYPE_MASK;
+    mtx = (rt_mutex_t)&(mutex->mtx);
+    if (mtx->owner == rt_thread_self() &&
+        mtype != PTHREAD_MUTEX_RECURSIVE)
+    {
+        rt_exit_critical();
+
+        return EDEADLK;
+    }
+    rt_exit_critical();
+
+    result = rt_mutex_take(mtx, 0);
+    if (result == RT_EOK) return 0;
+
+    return EBUSY;
+}
+RTM_EXPORT(pthread_mutex_trylock);

@@ -1,0 +1,38 @@
+choice
+    prompt "select app demo"
+    default APP_CONFIG_HELLOWORLD
+
+config APP_CONFIG_HELLOWORLD
+    bool "helloworld"
+    help
+        The helloworld demo
+
+config APP_CONFIG_MEDIA_DEMO
+    bool "media demo"
+    select FH_ENABLE_VIDEO
+    help
+        The media demo
+
+config APP_CONFIG_FIRMWARE_DEMO
+    bool "firmware demo (integration host)"
+    select FH_ENABLE_VIDEO
+    help
+        Integration host app based on media_demo:
+        nna face detect + k-algorithm + TOF + LVGL
+
+config APP_CONFIG_BSP_DEMO
+    bool "bsp demo"
+    help
+        The bsp demo
+
+config APP_CONFIG_AUDIO_DEMO
+    bool "audio demo"
+    help
+        audio demo
+
+config APP_CONFIG_AOV_DEMO
+    bool "aov demo"
+    help
+        aov demo
+endchoice
+

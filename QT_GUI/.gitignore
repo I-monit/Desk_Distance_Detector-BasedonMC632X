@@ -1,0 +1,19 @@
+# Build artifacts
+build/
+cmake-build-*/
+
+# Logs
+*.log
+tests/*.out
+tests/*.err
+tests/ffmpeg_backup/
+tests/*.mp4
+
+# IDE
+.idea/
+.vscode/
+compile_commands.json
+
+# Temp
+*.tmp
+__pycache__/

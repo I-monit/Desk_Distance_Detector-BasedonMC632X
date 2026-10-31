@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="qt_monitor">icons/qt_monitor_256.png</file>
+        <file alias="qt_monitor_64">icons/qt_monitor_64.png</file>
+        <file alias="qt_monitor_32">icons/qt_monitor_32.png</file>
+        <file alias="qt_monitor_16">icons/qt_monitor_16.png</file>
+    </qresource>
+</RCC>

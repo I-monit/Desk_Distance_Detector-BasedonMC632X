@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1100</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MC632X办公人员桌面测距仪</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
+    <property name="spacing">
+     <number>8</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="alertBanner">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>36</height>
+       </size>
+      </property>
+      <property name="visible">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>距离过近，请保持健康用眼距离</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSplitter" name="mainSplitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
+      <property name="handleWidth">
+       <number>6</number>
+      </property>
+      <widget class="QWidget" name="leftPanel">
+       <layout class="QVBoxLayout" name="leftLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QSplitter" name="vertSplitter">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="childrenCollapsible">
+           <bool>true</bool>
+          </property>
+          <property name="handleWidth">
+           <number>6</number>
+          </property>
+          <widget class="QWidget" name="videoContainer">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>300</height>
+            </size>
+           </property>
+           <layout class="QVBoxLayout" name="videoLayout">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <property name="spacing">
+             <number>0</number>
+            </property>
+           </layout>
+          </widget>
+          <widget class="QGroupBox" name="chartGroup">
+           <property name="title">
+            <string>距离曲线 · 分布分析</string>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>220</height>
+            </size>
+           </property>
+           <layout class="QHBoxLayout" name="chartLayout">
+            <property name="leftMargin">
+             <number>6</number>
+            </property>
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="rightMargin">
+             <number>6</number>
+            </property>
+            <property name="bottomMargin">
+             <number>6</number>
+            </property>
+            <property name="spacing">
+             <number>8</number>
+            </property>
+            <item>
+             <widget class="QWidget" name="chartLeft">
+              <layout class="QVBoxLayout" name="chartLeftLayout">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <property name="spacing">
+                <number>0</number>
+               </property>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="chartRight">
+              <layout class="QVBoxLayout" name="chartRightLayout">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <property name="spacing">
+                <number>4</number>
+               </property>
+               <item>
+                <widget class="QWidget" name="heatmapHeader">
+                 <layout class="QHBoxLayout" name="heatmapHeaderLayout">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="spacing">
+                   <number>6</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="heatmapHint">
+                    <property name="text">
+                     <string>按距离区间累计样本与停留时长</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="heatmapHeaderSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="analyzeBtn">
+                    <property name="text">
+                     <string>开启分析</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>true</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>96</width>
+                      <height>28</height>
+                     </size>
+                    </property>
+                    <property name="toolTip">
+                     <string>开启后按距离区间累计样本占比与停留时长, 再次点击停止</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QWidget" name="heatmapBins">
+                 <layout class="QHBoxLayout" name="heatmapBinsLayout">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="spacing">
+                   <number>6</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="binEdgesLabel">
+                    <property name="text">
+                     <string>区间边界</string>
+                    </property>
+                    <property name="toolTip">
+                     <string>四个距离区间 = 0~边界1 / 边界1+1~边界2 / 边界2+1~边界3 / &gt;边界3 (mm), 需严格递增; 修改后饼图扇区重建, 已累计样本清零</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="binEdge1Spin">
+                    <property name="toolTip">
+                     <string>第 1/2/3 区间上边界 (mm), 四个区间 = 0~边界1 / 边界1+1~边界2 / 边界2+1~边界3 / &gt;边界3</string>
+                    </property>
+                    <property name="suffix">
+                     <string/>
+                    </property>
+                    <property name="prefix">
+                     <string>0-</string>
+                    </property>
+                    <property name="minimum">
+                     <number>100</number>
+                    </property>
+                    <property name="maximum">
+                     <number>1996</number>
+                    </property>
+                    <property name="value">
+                     <number>299</number>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>86</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="binEdge2Spin">
+                    <property name="toolTip">
+                     <string>第 2/3 区间上边界 (mm), 自动维持严格递增</string>
+                    </property>
+                    <property name="minimum">
+                     <number>101</number>
+                    </property>
+                    <property name="maximum">
+                     <number>1997</number>
+                    </property>
+                    <property name="value">
+                     <number>499</number>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>86</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="binEdge3Spin">
+                    <property name="toolTip">
+                     <string>第 3/4 区间上边界 (mm), 超出部分计入 &gt;边界3 扇区</string>
+                    </property>
+                    <property name="minimum">
+                     <number>102</number>
+                    </property>
+                    <property name="maximum">
+                     <number>1998</number>
+                    </property>
+                    <property name="value">
+                     <number>700</number>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>86</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="binEdgesUnit">
+                    <property name="text">
+                     <string>mm</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="heatmapBinsSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QWidget" name="heatmapContainer">
+                 <layout class="QVBoxLayout" name="heatmapContainerLayout">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QGroupBox" name="logGroup">
+           <property name="title">
+            <string>系统日志</string>
+           </property>
+           <layout class="QVBoxLayout" name="logGroupLayout">
+            <property name="leftMargin">
+             <number>6</number>
+            </property>
+            <property name="topMargin">
+             <number>6</number>
+            </property>
+            <property name="rightMargin">
+             <number>6</number>
+            </property>
+            <property name="bottomMargin">
+             <number>6</number>
+            </property>
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QWidget" name="logHeader">
+              <layout class="QHBoxLayout" name="logHeaderLayout">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <property name="spacing">
+                <number>6</number>
+               </property>
+               <item>
+                <spacer name="logHeaderSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QToolButton" name="logToggleBtn">
+                 <property name="text">
+                  <string>展开</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>折叠/展开日志内容</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="logContainer">
+              <layout class="QVBoxLayout" name="logContainerLayout">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <property name="spacing">
+                <number>0</number>
+               </property>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="dashboardSidebar">
+       <property name="minimumSize">
+        <size>
+         <width>340</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>380</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="sidebarLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="statusGroup">
+          <property name="title">
+           <string>运行状态</string>
+          </property>
+          <layout class="QVBoxLayout" name="statusLayout">
+           <property name="leftMargin">
+            <number>8</number>
+           </property>
+           <property name="topMargin">
+            <number>8</number>
+           </property>
+           <property name="rightMargin">
+            <number>8</number>
+           </property>
+           <property name="bottomMargin">
+            <number>8</number>
+           </property>
+           <property name="spacing">
+            <number>8</number>
+           </property>
+           <item>
+            <widget class="QWidget" name="statusConnRow">
+             <layout class="QHBoxLayout" name="statusConnLayout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="connDot">
+                <property name="text">
+                 <string>●</string>
+                </property>
+                <property name="toolTip">
+                 <string>状态通道 (TCP 6000) 连接状态</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="connText">
+                <property name="text">
+                 <string>离线</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="statusDotSep">
+                <property name="text">
+                 <string>·</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="stateDot">
+                <property name="text">
+                 <string>●</string>
+                </property>
+                <property name="toolTip">
+                 <string>算法状态</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="stateText">
+                <property name="text">
+                 <string>IDLE</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="statusConnSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="dCard">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <layout class="QGridLayout" name="dCardLayout">
+              <property name="leftMargin">
+               <number>12</number>
+              </property>
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <property name="rightMargin">
+               <number>12</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <property name="horizontalSpacing">
+               <number>8</number>
+              </property>
+              <property name="verticalSpacing">
+               <number>6</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="dLabel">
+                <property name="text">
+                 <string>距离</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="dValue">
+                <property name="text">
+                 <string>--</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignVCenter</set>
+                </property>
+                <property name="toolTip">
+                 <string>距离 (mm)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="dUnit">
+                <property name="text">
+                 <string>mm</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="cLabel">
+                <property name="text">
+                 <string>针孔常数 C</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLabel" name="cValue">
+                <property name="text">
+                 <string>--</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignVCenter</set>
+                </property>
+                <property name="toolTip">
+                 <string>针孔常数 (mm·px)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="cUnit">
+                <property name="text">
+                 <string>mm·px</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="wLabel">
+                <property name="text">
+                 <string>人脸宽 W</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="wValue">
+                <property name="text">
+                 <string>--</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignVCenter</set>
+                </property>
+                <property name="toolTip">
+                 <string>人脸像素宽 (px)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="wUnit">
+                <property name="text">
+                 <string>px</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="statusCalibRow">
+             <layout class="QHBoxLayout" name="statusCalibLayout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <item>
+               <widget class="QProgressBar" name="calibBar">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>14</height>
+                 </size>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+                <property name="textVisible">
+                 <bool>true</bool>
+                 </property>
+                <property name="format">
+                 <string>配对 %v/%m</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="calibLabel">
+                <property name="text">
+                 <string>标定中</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="statusCalibSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="connectionGroup">
+          <property name="title">
+           <string>板端连接</string>
+          </property>
+          <layout class="QGridLayout" name="connectionLayout">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>8</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>8</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="ipLabel">
+             <property name="text">
+              <string>板端 IP</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="boardIpEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="portLabel">
+             <property name="text">
+              <string>状态端口</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="boardPortEdit"/>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="connectBtn">
+             <property name="text">
+              <string>连接</string>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QPushButton" name="calibrateBtn">
+             <property name="text">
+              <string>开始标定</string>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="alertGroup">
+          <property name="title">
+           <string>过近提醒</string>
+          </property>
+          <layout class="QVBoxLayout" name="alertLayout">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="alertChk">
+             <property name="toolTip">
+              <string>距离过近持续超过设定时间时, 界面横幅提醒并发出提示音 (PC 本地判定)</string>
+             </property>
+             <property name="text">
+              <string>启用提醒</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="alertDminRow">
+             <layout class="QHBoxLayout" name="alertDminLayout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="spacing">
+               <number>8</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="alertDminLabel">
+                <property name="text">
+                 <string>阈值</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="alertDminSpin">
+                <property name="toolTip">
+                 <string>判定过近的距离阈值 (mm)</string>
+                </property>
+                <property name="suffix">
+                 <string> mm</string>
+                </property>
+                <property name="minimum">
+                 <number>200</number>
+                </property>
+                <property name="maximum">
+                 <number>500</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>300</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="alertHoldRow">
+             <layout class="QHBoxLayout" name="alertHoldLayout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="spacing">
+               <number>8</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="alertHoldLabel">
+                <property name="text">
+                 <string>持续</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="alertHoldSpin">
+                <property name="toolTip">
+                 <string>距离持续低于阈值该时长后触发提醒</string>
+                </property>
+                <property name="suffix">
+                 <string> s</string>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>5</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="alertHelpText">
+             <property name="text">
+              <string>距离持续低于阈值达到持续秒后, 顶部横幅提醒并提示音</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="sidebarSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+   <property name="styleSheet">
+    <string notr="true">QMainWindow, QWidget { background-color: #1e1e2e; color: #e4e4f4; font-family: &quot;Segoe UI&quot;, &quot;Microsoft YaHei UI&quot;, &quot;PingFang SC&quot;, sans-serif; font-size: 10pt; }
+QStatusBar { background-color: #181825; color: #8a8aa3; border-top: 1px solid #313244; }
+QToolTip { background-color: #313244; color: #e4e4f4; border: 1px solid #45475a; padding: 4px 6px; }
+QGroupBox { background-color: #232336; border: 1px solid #313244; border-radius: 8px; margin-top: 14px; padding: 8px 6px 6px 6px; font-weight: bold; }
+QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 8px; color: #cdd6f4; background-color: transparent; font-size: 10pt; }
+QPushButton { background-color: #313244; color: #e4e4f4; border: 1px solid #45475a; border-radius: 6px; padding: 6px 14px; min-height: 22px; }
+QPushButton:hover { background-color: #3b3d52; }
+QPushButton:pressed { background-color: #45475a; }
+QPushButton:disabled { background-color: #232336; color: #6c7086; border-color: #313244; }
+QPushButton#connectBtn { background-color: #89b4fa; color: #1e1e2e; border-color: #89b4fa; font-weight: bold; }
+QPushButton#connectBtn:hover { background-color: #b4befe; }
+QPushButton#connectBtn:pressed { background-color: #74a8f0; }
+QPushButton#connectBtn:disabled { background-color: #45475a; color: #8a8aa3; border-color: #45475a; }
+QPushButton#analyzeBtn { background-color: #313244; color: #cdd6f4; border-color: #45475a; }
+QPushButton#analyzeBtn:hover { background-color: #3b3d52; }
+QPushButton#analyzeBtn:checked { background-color: #a6e3a1; color: #1e1e2e; border-color: #a6e3a1; font-weight: bold; }
+QPushButton#analyzeBtn:checked:hover { background-color: #b8ebae; }
+QLabel#heatmapHint { color: #8a8aa3; font-size: 9pt; }
+QLineEdit, QSpinBox, QDoubleSpinBox { background-color: #1e1e2e; color: #e4e4f4; border: 1px solid #45475a; border-radius: 5px; padding: 4px 6px; selection-background-color: #89b4fa; selection-color: #1e1e2e; }
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus { border-color: #89b4fa; }
+QSpinBox::up-button, QSpinBox::down-button { background-color: transparent; border: none; width: 16px; }
+QSpinBox::up-button:hover, QSpinBox::down-button:hover { background-color: #45475a; }
+QCheckBox { color: #e4e4f4; spacing: 6px; }
+QCheckBox::indicator { width: 16px; height: 16px; border: 1px solid #45475a; border-radius: 3px; background-color: #1e1e2e; }
+QCheckBox::indicator:hover { border-color: #89b4fa; }
+QCheckBox::indicator:checked { background-color: #89b4fa; border-color: #89b4fa; }
+QProgressBar { background-color: #1e1e2e; border: 1px solid #313244; border-radius: 4px; text-align: center; color: #e4e4f4; min-height: 14px; }
+QProgressBar::chunk { background-color: #a6e3a1; border-radius: 3px; }
+QSplitter::handle { background-color: #313244; }
+QSplitter::handle:horizontal { width: 6px; }
+QSplitter::handle:vertical { height: 6px; }
+QSplitter::handle:hover { background-color: #45475a; }
+QLabel[role=&quot;alert&quot;] { background-color: #f38ba8; color: #1e1e2e; border-radius: 6px; padding: 6px 12px; font-size: 12pt; font-weight: bold; }
+QFrame#dCard { background-color: #1a1a28; border: 1px solid #313244; border-radius: 8px; }
+QFrame#dCard QLabel { color: #e4e4f4; }
+QFrame#dCard QLabel#dLabel, QFrame#dCard QLabel#cLabel, QFrame#dCard QLabel#wLabel, QFrame#dCard QLabel#dUnit, QFrame#dCard QLabel#cUnit, QFrame#dCard QLabel#wUnit { color: #8a8aa3; }
+QFrame#dCard QLabel#dValue { color: #89b4fa; font-size: 28pt; font-weight: bold; }
+QFrame#dCard QLabel#cValue, QFrame#dCard QLabel#wValue { color: #e4e4f4; font-size: 14pt; font-weight: 600; }
+QFrame#dCard QLabel#dUnit, QFrame#dCard QLabel#cUnit, QFrame#dCard QLabel#wUnit { font-size: 10pt; }
+QWidget#statusConnRow QLabel { font-size: 11pt; }
+QLabel#alertHelpText { color: #8a8aa3; font-size: 9pt; }
+QFrame#logBody { background-color: #181825; border: 1px solid #313244; border-radius: 6px; }
+QLabel#logHint { color: #8a8aa3; font-size: 9pt; padding: 4px 6px; }
+QToolButton#logClearBtn { background-color: transparent; color: #8a8aa3; border: 1px solid #45475a; border-radius: 4px; padding: 2px 10px; }
+QToolButton#logClearBtn:hover { color: #e4e4f4; border-color: #89b4fa; }
+QPlainTextEdit#logEdit { background-color: #181825; color: #e4e4f4; border: none; border-top: 1px solid #313244; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; padding: 4px 6px; font-family: &quot;Consolas&quot;, &quot;Cascadia Mono&quot;, monospace; font-size: 9pt; }
+QPlainTextEdit#logEdit QScrollBar:vertical { background: #181825; width: 10px; margin: 0; }
+QPlainTextEdit#logEdit QScrollBar::handle:vertical { background: #45475a; border-radius: 4px; min-height: 24px; }
+QPlainTextEdit#logEdit QScrollBar::handle:vertical:hover { background: #585b70; }
+QPlainTextEdit#logEdit QScrollBar::add-line:vertical, QPlainTextEdit#logEdit QScrollBar::sub-line:vertical { height: 0; }
+QToolButton#logToggleBtn { background-color: transparent; color: #8a8aa3; border: 1px solid #45475a; border-radius: 4px; padding: 1px 10px; }
+QToolButton#logToggleBtn:hover { color: #e4e4f4; border-color: #89b4fa; }
+QToolButton#logToggleBtn:checked { color: #89b4fa; border-color: #89b4fa; }
+QLabel[state=&quot;READY&quot;] { color: #a6e3a1; font-size: 12pt; }
+QLabel[state=&quot;CALIBRATING&quot;] { color: #fab387; font-size: 12pt; }
+QLabel[state=&quot;IDLE&quot;] { color: #8a8aa3; font-size: 12pt; }
+QLabel[state=&quot;online&quot;] { color: #a6e3a1; font-size: 12pt; }
+QLabel[state=&quot;connecting&quot;] { color: #fab387; font-size: 12pt; }
+QLabel[state=&quot;offline&quot;] { color: #f38ba8; font-size: 12pt; }</string>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
